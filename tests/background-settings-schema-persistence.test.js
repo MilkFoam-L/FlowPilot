@@ -174,6 +174,9 @@ function resolveLegacyAutoStepDelaySeconds() { return undefined; }
 ${extractFunction('normalizePersistentSettingValue')}
 ${extractFunction('getSettingsSchemaApi')}
 ${extractFunction('projectSettingsSchemaView')}
+${extractFunction('setSettingsStatePatchValue')}
+${extractFunction('mergeSettingsStatePatch')}
+${extractFunction('buildSettingsStatePatchFromFlatUpdates')}
 ${extractFunction('buildPersistedSettingsStoragePayload')}
 ${extractFunction('buildPersistentSettingsPayload')}
 ${extractFunction('getPersistedSettings')}
@@ -512,4 +515,177 @@ function getRemovedKeys() {
   assert.equal(write.settingsState.flows.kiro.targetId, 'kiro-rs');
   assert.ok(api.getRemovedKeys().includes('panelMode'));
   assert.ok(api.getRemovedKeys().includes('kiroRsUrl'));
+});
+
+test('setPersistentSettings mirrors flat mail provider updates into canonical settingsState', async () => {
+  const api = buildHarness(`
+const persistedWrites = [];
+const removedKeys = [];
+const chrome = {
+  storage: {
+    local: {
+      async get() {
+        return {
+          settingsSchemaVersion: 4,
+          settingsState: {
+            activeFlowId: 'openai',
+            services: {
+              account: { customPassword: '' },
+              email: { provider: '163' },
+              proxy: { enabled: false, provider: '711proxy', mode: 'account' },
+            },
+            flows: {},
+          },
+        };
+      },
+      async remove(keys) {
+        removedKeys.push(...(Array.isArray(keys) ? keys : [keys]));
+      },
+      async set(payload) {
+        persistedWrites.push(JSON.parse(JSON.stringify(payload)));
+      },
+    },
+  },
+};
+function getPersistedWrites() {
+  return persistedWrites;
+}
+function getRemovedKeys() {
+  return removedKeys;
+}
+`);
+
+  const persisted = await api.setPersistentSettings({
+    mailProvider: 'cloudflare-temp-email',
+  });
+  const write = api.getPersistedWrites().at(-1);
+
+  assert.equal(persisted.mailProvider, 'cloudflare-temp-email');
+  assert.equal(persisted.settingsState.services.email.provider, 'cloudflare-temp-email');
+  assert.equal(write.settingsState.services.email.provider, 'cloudflare-temp-email');
+  assert.equal(Object.prototype.hasOwnProperty.call(write, 'mailProvider'), false);
+});
+
+test('setPersistentSettings mirrors flat schema updates without resetting other canonical settings', async () => {
+  const api = buildHarness(`
+const persistedWrites = [];
+const removedKeys = [];
+const chrome = {
+  storage: {
+    local: {
+      async get() {
+        return {
+          settingsSchemaVersion: 4,
+          settingsState: {
+            activeFlowId: 'openai',
+            services: {
+              account: { customPassword: 'old-password' },
+              email: { provider: '163' },
+              proxy: { enabled: false, provider: '711proxy', mode: 'account' },
+            },
+            flows: {
+              openai: {
+                integrationTargetId: 'cpa',
+                integrationTargets: {
+                  cpa: {
+                    vpsUrl: 'https://old-cpa.example.com',
+                    vpsPassword: 'old-vps-password',
+                    localCpaStep9Mode: 'submit',
+                  },
+                  sub2api: {
+                    sub2apiUrl: 'https://sub2api.example.com',
+                    sub2apiEmail: 'owner@example.com',
+                    sub2apiPassword: 'sub2api-secret',
+                    sub2apiGroupName: 'kept-group',
+                    sub2apiGroupNames: ['kept-group'],
+                    sub2apiAccountPriority: 7,
+                    sub2apiDefaultProxyName: 'proxy-a',
+                  },
+                  codex2api: {
+                    codex2apiUrl: 'https://codex2api.example.com',
+                    codex2apiAdminKey: 'codex-key',
+                  },
+                },
+                signup: {
+                  signupMethod: 'email',
+                  phoneVerificationEnabled: false,
+                  phoneSignupReloginAfterBindEmailEnabled: false,
+                },
+                plus: {
+                  plusModeEnabled: false,
+                  plusPaymentMethod: 'paypal',
+                  plusAccountAccessStrategy: 'oauth',
+                },
+                autoRun: {
+                  stepExecutionRange: { enabled: false, fromStep: 1, toStep: 11 },
+                },
+              },
+              kiro: {
+                targetId: 'kiro-rs',
+                targets: {
+                  'kiro-rs': {
+                    baseUrl: 'https://kiro.example.com/admin',
+                    apiKey: 'kiro-key',
+                  },
+                },
+                autoRun: {
+                  stepExecutionRange: { enabled: false, fromStep: 1, toStep: 9 },
+                },
+              },
+            },
+          },
+        };
+      },
+      async remove(keys) {
+        removedKeys.push(...(Array.isArray(keys) ? keys : [keys]));
+      },
+      async set(payload) {
+        persistedWrites.push(JSON.parse(JSON.stringify(payload)));
+      },
+    },
+  },
+};
+function getPersistedWrites() {
+  return persistedWrites;
+}
+function getRemovedKeys() {
+  return removedKeys;
+}
+`);
+
+  const persisted = await api.setPersistentSettings({
+    panelMode: 'sub2api',
+    mailProvider: 'cloudflare-temp-email',
+    ipProxyEnabled: true,
+    ipProxyMode: 'api',
+    stepExecutionRangeByFlow: {
+      openai: { enabled: true, fromStep: 2, toStep: 4 },
+    },
+  });
+  const write = api.getPersistedWrites().at(-1);
+
+  assert.equal(persisted.panelMode, 'sub2api');
+  assert.equal(persisted.mailProvider, 'cloudflare-temp-email');
+  assert.equal(persisted.ipProxyEnabled, true);
+  assert.equal(persisted.ipProxyMode, 'api');
+  assert.deepEqual(persisted.stepExecutionRangeByFlow.openai, {
+    enabled: true,
+    fromStep: 2,
+    toStep: 4,
+  });
+  assert.equal(write.settingsState.flows.openai.integrationTargetId, 'sub2api');
+  assert.equal(write.settingsState.services.email.provider, 'cloudflare-temp-email');
+  assert.equal(write.settingsState.services.proxy.enabled, true);
+  assert.equal(write.settingsState.services.proxy.mode, 'api');
+  assert.deepEqual(write.settingsState.flows.openai.autoRun.stepExecutionRange, {
+    enabled: true,
+    fromStep: 2,
+    toStep: 4,
+  });
+  assert.equal(write.settingsState.flows.openai.integrationTargets.sub2api.sub2apiUrl, 'https://sub2api.example.com');
+  assert.equal(write.settingsState.flows.openai.integrationTargets.sub2api.sub2apiEmail, 'owner@example.com');
+  assert.equal(write.settingsState.flows.kiro.targets['kiro-rs'].apiKey, 'kiro-key');
+  assert.equal(Object.prototype.hasOwnProperty.call(write, 'mailProvider'), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(write, 'panelMode'), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(write, 'ipProxyMode'), false);
 });

@@ -129,6 +129,36 @@ const PLUS_PAYPAL_PHONE_BOUND_EMAIL_RELOGIN_STEP_DEFINITIONS = self.MultiPageSte
   signupMethod: 'phone',
   phoneSignupReloginAfterBindEmailEnabled: true,
 }) || PLUS_PAYPAL_PHONE_STEP_DEFINITIONS;
+const PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
+  activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
+  plusModeEnabled: true,
+  plusPaymentMethod: 'paypal-hosted',
+}) || PLUS_PAYPAL_STEP_DEFINITIONS;
+const PLUS_PAYPAL_HOSTED_CHECKOUT_SUB2API_SESSION_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
+  activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
+  plusModeEnabled: true,
+  plusPaymentMethod: 'paypal-hosted',
+  plusAccountAccessStrategy: PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION,
+}) || PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS;
+const PLUS_PAYPAL_HOSTED_CHECKOUT_CPA_SESSION_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
+  activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
+  plusModeEnabled: true,
+  plusPaymentMethod: 'paypal-hosted',
+  plusAccountAccessStrategy: PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION,
+}) || PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS;
+const PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
+  activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
+  plusModeEnabled: true,
+  plusPaymentMethod: 'paypal-hosted',
+  signupMethod: 'phone',
+}) || PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS;
+const PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_BOUND_EMAIL_RELOGIN_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
+  activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
+  plusModeEnabled: true,
+  plusPaymentMethod: 'paypal-hosted',
+  signupMethod: 'phone',
+  phoneSignupReloginAfterBindEmailEnabled: true,
+}) || PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_STEP_DEFINITIONS;
 const PLUS_GOPAY_STEP_DEFINITIONS = self.MultiPageStepDefinitions?.getSteps?.({
   activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
   plusModeEnabled: true,
@@ -215,6 +245,11 @@ const ALL_STEP_DEFINITIONS = (() => {
     ...PLUS_PAYPAL_CPA_SESSION_STEP_DEFINITIONS,
     ...PLUS_PAYPAL_PHONE_STEP_DEFINITIONS,
     ...PLUS_PAYPAL_PHONE_BOUND_EMAIL_RELOGIN_STEP_DEFINITIONS,
+    ...PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS,
+    ...PLUS_PAYPAL_HOSTED_CHECKOUT_SUB2API_SESSION_STEP_DEFINITIONS,
+    ...PLUS_PAYPAL_HOSTED_CHECKOUT_CPA_SESSION_STEP_DEFINITIONS,
+    ...PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_STEP_DEFINITIONS,
+    ...PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_BOUND_EMAIL_RELOGIN_STEP_DEFINITIONS,
     ...PLUS_GOPAY_STEP_DEFINITIONS,
     ...PLUS_GOPAY_SUB2API_SESSION_STEP_DEFINITIONS,
     ...PLUS_GOPAY_CPA_SESSION_STEP_DEFINITIONS,
@@ -244,6 +279,10 @@ const PLUS_PAYPAL_STEP_IDS = PLUS_PAYPAL_STEP_DEFINITIONS
   .map((definition) => Number(definition?.id))
   .filter(Number.isFinite)
   .sort((left, right) => left - right);
+const PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_IDS = PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS
+  .map((definition) => Number(definition?.id))
+  .filter(Number.isFinite)
+  .sort((left, right) => left - right);
 const PLUS_GOPAY_STEP_IDS = PLUS_GOPAY_STEP_DEFINITIONS
   .map((definition) => Number(definition?.id))
   .filter(Number.isFinite)
@@ -256,6 +295,7 @@ const PLUS_STEP_IDS = PLUS_PAYPAL_STEP_IDS;
 const LAST_STEP_ID = Math.max(
   NORMAL_STEP_IDS[NORMAL_STEP_IDS.length - 1] || 10,
   PLUS_PAYPAL_STEP_IDS[PLUS_PAYPAL_STEP_IDS.length - 1] || 10,
+  PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_IDS[PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_IDS.length - 1] || 10,
   PLUS_GOPAY_STEP_IDS[PLUS_GOPAY_STEP_IDS.length - 1] || 10,
   PLUS_GPC_STEP_IDS[PLUS_GPC_STEP_IDS.length - 1] || 10
 );
@@ -684,9 +724,11 @@ const HERO_SMS_COUNTRY_BY_PHONE_PREFIX = Object.freeze([
 ]);
 const FIVE_SIM_OPERATOR = DEFAULT_FIVE_SIM_OPERATOR;
 const PLUS_PAYMENT_METHOD_PAYPAL = 'paypal';
+const PLUS_PAYMENT_METHOD_PAYPAL_HOSTED = 'paypal-hosted';
 const PLUS_PAYMENT_METHOD_GOPAY = 'gopay';
 const PLUS_PAYMENT_METHOD_GPC_HELPER = 'gpc-helper';
-const DEFAULT_PLUS_PAYMENT_METHOD = PLUS_PAYMENT_METHOD_PAYPAL;
+const DEFAULT_PLUS_PAYMENT_METHOD = PLUS_PAYMENT_METHOD_PAYPAL_HOSTED;
+const DEFAULT_PLUS_HOSTED_CHECKOUT_OAUTH_DELAY_SECONDS = 3;
 const DISPLAY_TIMEZONE = 'Asia/Shanghai';
 const MICROSOFT_TOKEN_DNR_RULE_ID = 1001;
 const PERSISTENT_ALIAS_STATE_KEYS = [
@@ -784,6 +826,12 @@ function isPlusModeState(state = {}) {
 
 function normalizePlusPaymentMethod(value = '') {
   const normalized = String(value || '').trim().toLowerCase();
+  const paypalHostedValue = typeof PLUS_PAYMENT_METHOD_PAYPAL_HOSTED !== 'undefined'
+    ? PLUS_PAYMENT_METHOD_PAYPAL_HOSTED
+    : 'paypal-hosted';
+  if (normalized === paypalHostedValue || normalized === 'paypal_direct' || normalized === 'paypal-direct') {
+    return paypalHostedValue;
+  }
   if (normalized === PLUS_PAYMENT_METHOD_GPC_HELPER) {
     return PLUS_PAYMENT_METHOD_GPC_HELPER;
   }
@@ -940,6 +988,20 @@ function getStepDefinitionsForState(state = {}) {
     }
     return PLUS_GOPAY_STEP_DEFINITIONS;
   }
+  if (paymentMethod === PLUS_PAYMENT_METHOD_PAYPAL_HOSTED) {
+    if (signupMethod === SIGNUP_METHOD_PHONE) {
+      return Boolean(resolvedState?.phoneSignupReloginAfterBindEmailEnabled)
+        ? PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_BOUND_EMAIL_RELOGIN_STEP_DEFINITIONS
+        : PLUS_PAYPAL_HOSTED_CHECKOUT_PHONE_STEP_DEFINITIONS;
+    }
+    if (plusAccountAccessStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
+      return PLUS_PAYPAL_HOSTED_CHECKOUT_SUB2API_SESSION_STEP_DEFINITIONS;
+    }
+    if (plusAccountAccessStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
+      return PLUS_PAYPAL_HOSTED_CHECKOUT_CPA_SESSION_STEP_DEFINITIONS;
+    }
+    return PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_DEFINITIONS;
+  }
   if (
     signupMethod === SIGNUP_METHOD_EMAIL
     && plusAccountAccessStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
@@ -969,6 +1031,9 @@ function getStepIdsForState(state = {}) {
   const paymentMethod = normalizePlusPaymentMethod(state?.plusPaymentMethod);
   if (paymentMethod === PLUS_PAYMENT_METHOD_GPC_HELPER) {
     return PLUS_GPC_STEP_IDS;
+  }
+  if (paymentMethod === PLUS_PAYMENT_METHOD_PAYPAL_HOSTED) {
+    return PLUS_PAYPAL_HOSTED_CHECKOUT_STEP_IDS;
   }
   return paymentMethod === PLUS_PAYMENT_METHOD_GOPAY ? PLUS_GOPAY_STEP_IDS : PLUS_PAYPAL_STEP_IDS;
 }
@@ -1154,6 +1219,9 @@ const PERSISTED_SETTING_DEFAULTS = {
   plusModeEnabled: false,
   plusPaymentMethod: DEFAULT_PLUS_PAYMENT_METHOD,
   plusAccountAccessStrategy: 'oauth',
+  hostedCheckoutVerificationUrl: '',
+  hostedCheckoutPhoneNumber: '',
+  plusHostedCheckoutOauthDelaySeconds: DEFAULT_PLUS_HOSTED_CHECKOUT_OAUTH_DELAY_SECONDS,
   paypalEmail: '',
   paypalPassword: '',
   currentPayPalAccountId: '',
@@ -1329,6 +1397,9 @@ const SETTINGS_SCHEMA_VIEW_KEYS = Object.freeze([
   'plusModeEnabled',
   'plusPaymentMethod',
   'plusAccountAccessStrategy',
+  'hostedCheckoutVerificationUrl',
+  'hostedCheckoutPhoneNumber',
+  'plusHostedCheckoutOauthDelaySeconds',
   'mailProvider',
   'ipProxyEnabled',
   'ipProxyService',
@@ -1899,6 +1970,12 @@ function normalizePlusPaymentMethod(value = '') {
     return rootScope.GoPayUtils.normalizePlusPaymentMethod(value);
   }
   const normalized = String(value || '').trim().toLowerCase();
+  const paypalHostedValue = typeof PLUS_PAYMENT_METHOD_PAYPAL_HOSTED !== 'undefined'
+    ? PLUS_PAYMENT_METHOD_PAYPAL_HOSTED
+    : 'paypal-hosted';
+  if (normalized === paypalHostedValue || normalized === 'paypal_direct' || normalized === 'paypal-direct') {
+    return paypalHostedValue;
+  }
   if (normalized === PLUS_PAYMENT_METHOD_GPC_HELPER) {
     return PLUS_PAYMENT_METHOD_GPC_HELPER;
   }
@@ -3134,6 +3211,14 @@ function normalizePersistentSettingValue(key, value) {
       return normalizePlusPaymentMethod(value);
     case 'plusAccountAccessStrategy':
       return normalizePlusAccountAccessStrategy(value);
+    case 'hostedCheckoutVerificationUrl':
+      return String(value || '').trim();
+    case 'hostedCheckoutPhoneNumber':
+      return String(value || '').trim();
+    case 'plusHostedCheckoutOauthDelaySeconds': {
+      const numeric = Number(value);
+      return Math.min(120, Math.max(0, Math.floor(Number.isFinite(numeric) ? numeric : DEFAULT_PLUS_HOSTED_CHECKOUT_OAUTH_DELAY_SECONDS)));
+    }
     case 'paypalEmail':
       return String(value || '').trim();
     case 'paypalPassword':
@@ -3626,6 +3711,97 @@ function projectSettingsSchemaView(settingsSchemaApi, normalizedInput = {}, payl
   return settingsSchemaApi.buildSettingsView(normalizedSettingsState, payload);
 }
 
+function setSettingsStatePatchValue(patch, path, value) {
+  let cursor = patch;
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const key = path[index];
+    if (!isPlainObjectValue(cursor[key])) {
+      cursor[key] = {};
+    }
+    cursor = cursor[key];
+  }
+  cursor[path[path.length - 1]] = value;
+}
+
+function mergeSettingsStatePatch(baseValue = {}, patchValue = {}) {
+  if (!isPlainObjectValue(patchValue)) {
+    return isPlainObjectValue(baseValue) ? { ...baseValue } : {};
+  }
+  const next = {
+    ...(isPlainObjectValue(baseValue) ? baseValue : {}),
+  };
+  Object.entries(patchValue).forEach(([key, value]) => {
+    next[key] = isPlainObjectValue(value)
+      ? mergeSettingsStatePatch(next[key], value)
+      : value;
+  });
+  return next;
+}
+
+function buildSettingsStatePatchFromFlatUpdates(updates = {}) {
+  const patch = {};
+  const hasUpdate = (key) => Object.prototype.hasOwnProperty.call(updates, key);
+  const assignIfUpdated = (key, path) => {
+    if (hasUpdate(key)) {
+      setSettingsStatePatchValue(patch, path, updates[key]);
+    }
+  };
+
+  assignIfUpdated('activeFlowId', ['activeFlowId']);
+  if (hasUpdate('openaiIntegrationTargetId') || hasUpdate('panelMode')) {
+    setSettingsStatePatchValue(
+      patch,
+      ['flows', 'openai', 'integrationTargetId'],
+      hasUpdate('openaiIntegrationTargetId') ? updates.openaiIntegrationTargetId : updates.panelMode
+    );
+  }
+  assignIfUpdated('kiroTargetId', ['flows', 'kiro', 'targetId']);
+  assignIfUpdated('vpsUrl', ['flows', 'openai', 'integrationTargets', 'cpa', 'vpsUrl']);
+  assignIfUpdated('vpsPassword', ['flows', 'openai', 'integrationTargets', 'cpa', 'vpsPassword']);
+  assignIfUpdated('localCpaStep9Mode', ['flows', 'openai', 'integrationTargets', 'cpa', 'localCpaStep9Mode']);
+  assignIfUpdated('sub2apiUrl', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiUrl']);
+  assignIfUpdated('sub2apiEmail', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiEmail']);
+  assignIfUpdated('sub2apiPassword', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiPassword']);
+  assignIfUpdated('sub2apiGroupName', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiGroupName']);
+  assignIfUpdated('sub2apiGroupNames', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiGroupNames']);
+  assignIfUpdated('sub2apiAccountPriority', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiAccountPriority']);
+  assignIfUpdated('sub2apiDefaultProxyName', ['flows', 'openai', 'integrationTargets', 'sub2api', 'sub2apiDefaultProxyName']);
+  assignIfUpdated('codex2apiUrl', ['flows', 'openai', 'integrationTargets', 'codex2api', 'codex2apiUrl']);
+  assignIfUpdated('codex2apiAdminKey', ['flows', 'openai', 'integrationTargets', 'codex2api', 'codex2apiAdminKey']);
+  assignIfUpdated('customPassword', ['services', 'account', 'customPassword']);
+  assignIfUpdated('signupMethod', ['flows', 'openai', 'signup', 'signupMethod']);
+  assignIfUpdated('phoneVerificationEnabled', ['flows', 'openai', 'signup', 'phoneVerificationEnabled']);
+  assignIfUpdated('phoneSignupReloginAfterBindEmailEnabled', ['flows', 'openai', 'signup', 'phoneSignupReloginAfterBindEmailEnabled']);
+  assignIfUpdated('plusModeEnabled', ['flows', 'openai', 'plus', 'plusModeEnabled']);
+  assignIfUpdated('plusPaymentMethod', ['flows', 'openai', 'plus', 'plusPaymentMethod']);
+  assignIfUpdated('plusAccountAccessStrategy', ['flows', 'openai', 'plus', 'plusAccountAccessStrategy']);
+  assignIfUpdated('mailProvider', ['services', 'email', 'provider']);
+  assignIfUpdated('ipProxyEnabled', ['services', 'proxy', 'enabled']);
+  assignIfUpdated('ipProxyService', ['services', 'proxy', 'provider']);
+  assignIfUpdated('ipProxyMode', ['services', 'proxy', 'mode']);
+  assignIfUpdated('kiroRsUrl', ['flows', 'kiro', 'targets', 'kiro-rs', 'baseUrl']);
+  assignIfUpdated('kiroRsKey', ['flows', 'kiro', 'targets', 'kiro-rs', 'apiKey']);
+
+  if (hasUpdate('stepExecutionRangeByFlow') && isPlainObjectValue(updates.stepExecutionRangeByFlow)) {
+    if (isPlainObjectValue(updates.stepExecutionRangeByFlow.openai)) {
+      setSettingsStatePatchValue(
+        patch,
+        ['flows', 'openai', 'autoRun', 'stepExecutionRange'],
+        updates.stepExecutionRangeByFlow.openai
+      );
+    }
+    if (isPlainObjectValue(updates.stepExecutionRangeByFlow.kiro)) {
+      setSettingsStatePatchValue(
+        patch,
+        ['flows', 'kiro', 'autoRun', 'stepExecutionRange'],
+        updates.stepExecutionRangeByFlow.kiro
+      );
+    }
+  }
+
+  return patch;
+}
+
 function buildPersistedSettingsStoragePayload(payload = {}) {
   const storagePayload = {};
   Object.entries(payload || {}).forEach(([key, value]) => {
@@ -3976,6 +4152,10 @@ async function setPersistentSettings(updates) {
         ? settingsSchemaApi.mergeSettingsState(currentSettingsState, nextUpdates.settingsState)
         : nextUpdates.settingsState)
       : currentSettingsState;
+    mergedSettingsState = mergeSettingsStatePatch(
+      mergedSettingsState,
+      buildSettingsStatePatchFromFlatUpdates(explicitFlatUpdates)
+    );
   }
 
   const nextPayloadInput = {
@@ -10583,6 +10763,11 @@ const AUTO_RUN_BACKGROUND_COMPLETED_STEP_KEYS = new Set([
   'fetch-signup-code',
   'wait-registration-success',
   'plus-checkout-create',
+  'paypal-hosted-openai-checkout',
+  'paypal-hosted-email',
+  'paypal-hosted-card',
+  'paypal-hosted-create-account',
+  'paypal-hosted-review',
   'plus-checkout-billing',
   'paypal-approve',
   'plus-checkout-return',
@@ -11682,6 +11867,11 @@ const AUTO_RUN_NODE_DELAYS = Object.freeze({
   'fill-profile': 0,
   'wait-registration-success': 3000,
   'plus-checkout-create': 3000,
+  'paypal-hosted-openai-checkout': 2000,
+  'paypal-hosted-email': 2000,
+  'paypal-hosted-card': 2000,
+  'paypal-hosted-create-account': 2000,
+  'paypal-hosted-review': 2000,
   'plus-checkout-billing': 2000,
   'gopay-subscription-confirm': 2000,
   'paypal-approve': 2000,
@@ -13411,13 +13601,18 @@ const plusCheckoutCreateExecutor = self.MultiPageBackgroundPlusCheckoutCreate?.c
   createAutomationTab,
   ensureContentScriptReadyOnTabUntilStopped,
   fetch: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
+  getTabId,
+  getState,
+  isTabAlive,
   markCurrentRegistrationAccountUsed,
+  queryTabsInAutomationWindow,
   registerTab,
   sendTabMessageUntilStopped,
   setState,
   sleepWithStop,
   throwIfStopped,
   waitForTabCompleteUntilStopped,
+  waitForTabUrlMatchUntilStopped,
 });
 const plusCheckoutBillingExecutor = self.MultiPageBackgroundPlusCheckoutBilling?.createPlusCheckoutBillingExecutor({
   addLog,
@@ -13693,6 +13888,11 @@ const stepExecutorsByKey = {
   'fill-profile': (state) => step5Executor.executeStep5(state),
   'wait-registration-success': (state) => step6Executor.executeStep6(state),
   'plus-checkout-create': (state) => plusCheckoutCreateExecutor.executePlusCheckoutCreate(state),
+  'paypal-hosted-openai-checkout': (state) => plusCheckoutCreateExecutor.executePayPalHostedOpenAiCheckout(state),
+  'paypal-hosted-email': (state) => plusCheckoutCreateExecutor.executePayPalHostedEmail(state),
+  'paypal-hosted-card': (state) => plusCheckoutCreateExecutor.executePayPalHostedCard(state),
+  'paypal-hosted-create-account': (state) => plusCheckoutCreateExecutor.executePayPalHostedCreateAccount(state),
+  'paypal-hosted-review': (state) => plusCheckoutCreateExecutor.executePayPalHostedReview(state),
   'plus-checkout-billing': (state) => plusCheckoutBillingExecutor.executePlusCheckoutBilling(state),
   'gopay-subscription-confirm': (state) => goPayManualConfirmExecutor.executeGoPayManualConfirm(state),
   'paypal-approve': (state) => normalizePlusPaymentMethod(state?.plusPaymentMethod) === PLUS_PAYMENT_METHOD_GOPAY
