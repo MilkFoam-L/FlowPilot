@@ -9,6 +9,7 @@ importScripts(
   'gopay-utils.js',
   'phone-sms/providers/hero-sms.js',
   'phone-sms/providers/five-sim.js',
+  'phone-sms/providers/custom-sms.js',
   'phone-sms/providers/registry.js',
   'background/phone-verification-flow.js',
   'background/account-run-history.js',
@@ -556,11 +557,13 @@ const PHONE_SMS_PROVIDER_5SIM = '5sim';
 const PHONE_SMS_PROVIDER_HERO_SMS = PHONE_SMS_PROVIDER_HERO;
 const PHONE_SMS_PROVIDER_FIVE_SIM = PHONE_SMS_PROVIDER_5SIM;
 const PHONE_SMS_PROVIDER_NEXSMS = 'nexsms';
+const PHONE_SMS_PROVIDER_CUSTOM_SMS = 'custom-sms';
 const DEFAULT_PHONE_SMS_PROVIDER = PHONE_SMS_PROVIDER_HERO;
 const DEFAULT_PHONE_SMS_PROVIDER_ORDER = Object.freeze([
   PHONE_SMS_PROVIDER_HERO,
   PHONE_SMS_PROVIDER_5SIM,
   PHONE_SMS_PROVIDER_NEXSMS,
+  PHONE_SMS_PROVIDER_CUSTOM_SMS,
 ]);
 const DEFAULT_FIVE_SIM_BASE_URL = 'https://5sim.net/v1';
 const DEFAULT_FIVE_SIM_PRODUCT = 'openai';
@@ -967,6 +970,7 @@ const PERSISTED_SETTING_DEFAULTS = {
   signupMethod: DEFAULT_SIGNUP_METHOD,
   phoneSmsProvider: DEFAULT_PHONE_SMS_PROVIDER,
   phoneSmsProviderOrder: [],
+  customSmsPhoneEntries: [],
   verificationResendCount: DEFAULT_VERIFICATION_RESEND_COUNT,
   phoneVerificationReplacementLimit: DEFAULT_PHONE_VERIFICATION_REPLACEMENT_LIMIT,
   phoneCodeWaitSeconds: DEFAULT_PHONE_CODE_WAIT_SECONDS,
@@ -1485,6 +1489,9 @@ function normalizePhoneSmsProvider(value = '') {
   }
   if (normalized === PHONE_SMS_PROVIDER_NEXSMS) {
     return PHONE_SMS_PROVIDER_NEXSMS;
+  }
+  if (normalized === PHONE_SMS_PROVIDER_CUSTOM_SMS) {
+    return PHONE_SMS_PROVIDER_CUSTOM_SMS;
   }
   return PHONE_SMS_PROVIDER_HERO_SMS;
 }
@@ -2195,6 +2202,49 @@ function normalizeCustomEmailPoolEntryObjects(value = []) {
       used: Boolean(asObject.used),
       note: String(asObject.note || '').trim(),
       lastUsedAt: Number.isFinite(Number(asObject.lastUsedAt)) ? Number(asObject.lastUsedAt) : 0,
+    });
+  }
+
+  return entries;
+}
+
+function normalizeCustomSmsPhoneEntries(value = []) {
+  const source = Array.isArray(value)
+    ? value
+    : String(value || '')
+      .split(/\r?\n+/)
+      .map((entry) => String(entry || '').trim())
+      .filter(Boolean);
+  const entries = [];
+  const seen = new Set();
+
+  for (const rawEntry of source) {
+    const asObject = rawEntry && typeof rawEntry === 'object' && !Array.isArray(rawEntry)
+      ? rawEntry
+      : null;
+    const rawPhone = asObject
+      ? (asObject.phoneNumber ?? asObject.phone ?? asObject.mobile ?? asObject.msisdn ?? '')
+      : String(rawEntry || '').split(/\s*----\s*/)[0];
+    const rawUrl = asObject
+      ? (asObject.url ?? asObject.smsUrl ?? asObject.lookupUrl ?? asObject.endpoint ?? '')
+      : String(rawEntry || '').split(/\s*----\s*/).slice(1).join('----');
+    const phoneNumber = String(rawPhone || '').trim();
+    const normalizedPhoneDigits = phoneNumber.replace(/\D+/g, '');
+    if (!phoneNumber || !rawUrl || !normalizedPhoneDigits) {
+      continue;
+    }
+    const url = String(rawUrl || '').trim();
+    if (!url) {
+      continue;
+    }
+    const dedupeKey = normalizedPhoneDigits;
+    if (seen.has(dedupeKey)) {
+      continue;
+    }
+    seen.add(dedupeKey);
+    entries.push({
+      phoneNumber,
+      url,
     });
   }
 
@@ -3001,6 +3051,8 @@ function normalizePersistentSettingValue(key, value) {
       return normalizePhoneSmsProvider(value);
     case 'phoneSmsProviderOrder':
       return normalizePhoneSmsProviderOrder(value);
+    case 'customSmsPhoneEntries':
+      return normalizeCustomSmsPhoneEntries(value);
     case 'autoRunFallbackThreadIntervalMinutes':
       return normalizeAutoRunFallbackThreadIntervalMinutes(value);
     case 'autoRunDelayMinutes':
@@ -12507,6 +12559,7 @@ const phoneVerificationHelpers = self.MultiPageBackgroundPhoneVerification?.crea
   sleepWithStop,
   throwIfStopped,
   createFiveSimProvider: self.PhoneSmsFiveSimProvider?.createProvider,
+  createCustomSmsProvider: self.PhoneSmsCustomSmsProvider?.createProvider,
 });
 const step1Executor = self.MultiPageBackgroundStep1?.createStep1Executor({
   addLog,

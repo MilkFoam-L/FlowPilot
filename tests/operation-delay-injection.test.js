@@ -40,6 +40,9 @@ test('dynamic covered injections load operation delay after utils', () => {
     assert.ok(match, `missing ${constantName} in ${file}`);
     const block = match[1];
     assert.match(block, /'content\/utils\.js'[\s\S]*'content\/operation-delay\.js'/, `${file} must inject operation delay after utils`);
+    if (constantName === 'PAYPAL_INJECT_FILES') {
+      assert.match(block, /'content\/operation-delay\.js'[\s\S]*'content\/paypal-realtime-register\.js'[\s\S]*'content\/paypal-flow\.js'/, 'PayPal realtime register must load before paypal-flow');
+    }
     if (constantName === 'SIGNUP_PAGE_INJECT_FILES') {
       assert.match(block, /'content\/operation-delay\.js'[\s\S]*'content\/auth-page-recovery\.js'/, 'auth recovery must load after operation delay');
     }

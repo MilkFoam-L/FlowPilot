@@ -11,6 +11,7 @@ if (document.documentElement.getAttribute(PAYPAL_FLOW_LISTENER_SENTINEL) !== '1'
     if (
       message.type === 'PAYPAL_GET_STATE'
       || message.type === 'PAYPAL_SUBMIT_LOGIN'
+      || message.type === 'PAYPAL_RUN_REALTIME_REGISTER'
       || message.type === 'PAYPAL_DISMISS_PROMPTS'
       || message.type === 'PAYPAL_CLICK_APPROVE'
     ) {
@@ -43,6 +44,8 @@ async function handlePayPalCommand(message) {
       return inspectPayPalState();
     case 'PAYPAL_SUBMIT_LOGIN':
       return submitPayPalLogin(message.payload || {});
+    case 'PAYPAL_RUN_REALTIME_REGISTER':
+      return runPayPalRealtimeRegister();
     case 'PAYPAL_DISMISS_PROMPTS':
       return dismissPayPalPrompts();
     case 'PAYPAL_CLICK_APPROVE':
@@ -50,6 +53,14 @@ async function handlePayPalCommand(message) {
     default:
       throw new Error(`paypal-flow.js 不处理消息：${message.type}`);
   }
+}
+
+async function runPayPalRealtimeRegister() {
+  const runner = window?.PayPalRealtimeRegister?.run;
+  if (typeof runner !== 'function') {
+    throw new Error('PayPal 实时注册脚本未加载。');
+  }
+  return runner();
 }
 
 async function waitUntil(predicate, options = {}) {

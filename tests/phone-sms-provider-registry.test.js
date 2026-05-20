@@ -18,10 +18,11 @@ test('phone sms provider registry normalizes ids, order and labels consistently'
     },
   });
 
-  assert.deepStrictEqual(registry.getProviderIds(), ['hero-sms', '5sim', 'nexsms']);
+  assert.deepStrictEqual(registry.getProviderIds(), ['hero-sms', '5sim', 'nexsms', 'custom-sms']);
   assert.equal(registry.normalizeProviderId(' NEXSMS '), 'nexsms');
   assert.equal(registry.normalizeProviderId('unknown-provider'), 'hero-sms');
   assert.equal(registry.getProviderLabel('nexsms'), 'NexSMS');
+  assert.equal(registry.getProviderLabel('custom-sms'), '自定义接码');
   assert.equal(registry.getProviderDefinition('nexsms').moduleKey, 'PhoneSmsNexSmsProvider');
   assert.deepStrictEqual(
     registry.normalizeProviderOrder([

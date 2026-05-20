@@ -1368,7 +1368,13 @@
                 <option value="hero-sms">HeroSMS</option>
                 <option value="5sim">5sim</option>
                 <option value="nexsms">NexSMS</option>
+                <option value="custom-sms">自定义接码</option>
               </select>
+            </div>
+            <div class="data-row" id="row-custom-sms-phone-entries" style="display:none;">
+              <span class="data-label">自定义号码池</span>
+              <textarea id="input-custom-sms-phone-entries" class="data-textarea mono" rows="6"
+                placeholder="+19432832479----https://sms.985008.xyz/api/get_sms?key=...\n+18352881251----https://ithte.tgflare.com/api/record?token=...\n每行一个：手机号----取码URL"></textarea>
             </div>
             <div class="data-row" id="row-phone-sms-provider-order" style="display:none;">
               <span class="data-label">服务商顺序</span>
@@ -1803,6 +1809,7 @@
   <script src="../gopay-utils.js"></script>
   <script src="../phone-sms/providers/hero-sms.js"></script>
   <script src="../phone-sms/providers/five-sim.js"></script>
+  <script src="../phone-sms/providers/custom-sms.js"></script>
   <script src="../phone-sms/providers/registry.js"></script>
   <script src="../icloud-utils.js"></script>
   <script src="../mail-provider-utils.js"></script>

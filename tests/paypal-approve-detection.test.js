@@ -72,6 +72,9 @@ function createExecutor({
         events.submittedPayloads.push(message.payload);
         return submitQueue.shift() || { submitted: true, phase: 'password_submitted' };
       }
+      if (message.type === 'PAYPAL_RUN_REALTIME_REGISTER') {
+        return submitQueue.shift() || { ran: true, phase: 'registration_submitted' };
+      }
       if (message.type === 'PAYPAL_DISMISS_PROMPTS') {
         return { clicked: 0 };
       }
@@ -163,6 +166,12 @@ function createPayPalContentHarness() {
             listener = fn;
           },
         },
+      },
+    },
+    PayPalRealtimeRegister: {
+      async run() {
+        paypalEvents.push('run:paypal-realtime-register');
+        return { ran: true, phase: 'test_realtime_register' };
       },
     },
     CodexOperationDelay: {
@@ -258,9 +267,24 @@ test('PayPal approve keeps original combined email and password login path', asy
     paypalPassword: 'secret',
   });
 
-  assert.equal(events.submittedPayloads.length, 1);
+  assert.equal(events.submittedPayloads.length, 0);
+  assert.equal(events.messages.includes('PAYPAL_RUN_REALTIME_REGISTER'), true);
   assert.deepEqual(events.completed.map((item) => item.step), ['paypal-approve']);
   assert.equal(events.messages.includes('PAYPAL_CLICK_APPROVE'), true);
+});
+
+test('PayPal content routes realtime register messages to injected runner', async () => {
+  const { send } = createPayPalContentHarness();
+
+  const result = await send({
+    type: 'PAYPAL_RUN_REALTIME_REGISTER',
+    source: 'test',
+    payload: {},
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.ran, true);
+  assert.equal(result.phase, 'test_realtime_register');
 });
 
 test('PayPal content routes email and approve page operations through the operation delay gate', async () => {
@@ -371,9 +395,8 @@ test('PayPal approve prefers the selected paypal pool account over legacy fields
     ],
   });
 
-  assert.deepStrictEqual(events.submittedPayloads, [
-    { email: 'pool@example.com', password: 'pool-secret' },
-  ]);
+  assert.deepStrictEqual(events.submittedPayloads, []);
+  assert.equal(events.messages.includes('PAYPAL_RUN_REALTIME_REGISTER'), true);
 });
 
 test('PayPal approve discovers an already open unregistered PayPal tab', async () => {
@@ -463,9 +486,10 @@ test('PayPal approve auto-detects split email then password pages', async () => 
     paypalPassword: 'secret',
   });
 
-  assert.equal(events.submittedPayloads.length, 2);
+  assert.equal(events.submittedPayloads.length, 0);
+  assert.equal(events.messages.filter((type) => type === 'PAYPAL_RUN_REALTIME_REGISTER').length >= 2, true);
   assert.deepEqual(events.completed.map((item) => item.step), ['paypal-approve']);
-  assert.equal(events.logs.some(({ message }) => /识别到密码页/.test(message)), true);
+  assert.equal(events.logs.some(({ message }) => /实时注册脚本已进入下一页/.test(message)), true);
   assert.equal(events.messages.includes('PAYPAL_CLICK_APPROVE'), true);
 });
 
@@ -489,7 +513,8 @@ test('PayPal approve finishes when login redirects away from PayPal', async () =
     paypalPassword: 'secret',
   });
 
-  assert.equal(events.submittedPayloads.length, 1);
+  assert.equal(events.submittedPayloads.length, 0);
+  assert.equal(events.messages.includes('PAYPAL_RUN_REALTIME_REGISTER'), true);
   assert.deepEqual(events.completed.map((item) => item.step), ['paypal-approve']);
   assert.equal(events.messages.includes('PAYPAL_CLICK_APPROVE'), false);
 });

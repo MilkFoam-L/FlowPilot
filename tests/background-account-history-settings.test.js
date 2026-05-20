@@ -53,6 +53,7 @@ test('background account history settings are normalized independently from hotm
     extractFunction('normalizeCodex2ApiUrl'),
     extractFunction('normalizeHotmailLocalBaseUrl'),
     extractFunction('normalizeAccountRunHistoryHelperBaseUrl'),
+    extractFunction('normalizeCustomSmsPhoneEntries'),
     extractFunction('normalizeVerificationResendCount'),
     extractFunction('normalizePlusPaymentMethod'),
     extractFunction('normalizeGpcHelperPhoneMode'),
@@ -116,7 +117,8 @@ const HERO_SMS_COUNTRY_LABEL = 'Thailand';
 const PHONE_SMS_PROVIDER_HERO_SMS = 'hero-sms';
 const PHONE_SMS_PROVIDER_FIVE_SIM = '5sim';
 const PHONE_SMS_PROVIDER_NEXSMS = 'nexsms';
-const DEFAULT_PHONE_SMS_PROVIDER_ORDER = ['hero-sms', '5sim', 'nexsms'];
+const PHONE_SMS_PROVIDER_CUSTOM_SMS = 'custom-sms';
+const DEFAULT_PHONE_SMS_PROVIDER_ORDER = ['hero-sms', '5sim', 'nexsms', 'custom-sms'];
 const DEFAULT_PHONE_SMS_PROVIDER = PHONE_SMS_PROVIDER_HERO_SMS;
 const SIGNUP_METHOD_EMAIL = 'email';
 const SIGNUP_METHOD_PHONE = 'phone';
@@ -254,8 +256,20 @@ return {
   assert.equal(api.normalizePersistentSettingValue('signupMethod', 'unknown'), 'email');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', '5SIM'), '5sim');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', 'NEXSMS'), 'nexsms');
+  assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', 'custom-sms'), 'custom-sms');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', 'unknown'), 'hero-sms');
   assert.deepStrictEqual(api.normalizePersistentSettingValue('phoneSmsProviderOrder', ['nexsms', '5sim', 'nexsms']), ['nexsms', '5sim']);
+  assert.deepStrictEqual(
+    api.normalizePersistentSettingValue('customSmsPhoneEntries', [
+      '+19432832479----https://sms.985008.xyz/api/get_sms?key=aaa',
+      '+19432832479----https://sms.985008.xyz/api/get_sms?key=bbb',
+      '+18352881251----https://ithte.tgflare.com/api/record?token=ccc',
+    ]),
+    [
+      { phoneNumber: '+19432832479', url: 'https://sms.985008.xyz/api/get_sms?key=aaa' },
+      { phoneNumber: '+18352881251', url: 'https://ithte.tgflare.com/api/record?token=ccc' },
+    ]
+  );
   assert.equal(api.normalizePersistentSettingValue('phoneSmsReuseEnabled', false), false);
   assert.equal(api.normalizePersistentSettingValue('phoneSmsReuseEnabled', true), true);
   assert.equal(api.normalizePersistentSettingValue('fiveSimApiKey', ' demo-five '), ' demo-five ');

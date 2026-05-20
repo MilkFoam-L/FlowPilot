@@ -213,10 +213,15 @@ test('step definitions module exposes ordered normal and Plus step metadata', ()
 test('sidepanel html loads shared step definitions before sidepanel bootstrap', () => {
   const html = fs.readFileSync('sidepanel/sidepanel.html', 'utf8');
   const definitionsIndex = html.indexOf('<script src="../data/step-definitions.js"></script>');
+  const customSmsProviderIndex = html.indexOf('<script src="../phone-sms/providers/custom-sms.js"></script>');
+  const smsRegistryIndex = html.indexOf('<script src="../phone-sms/providers/registry.js"></script>');
   const sidepanelIndex = html.indexOf('<script src="sidepanel.js"></script>');
 
   assert.notEqual(definitionsIndex, -1);
+  assert.notEqual(customSmsProviderIndex, -1);
+  assert.notEqual(smsRegistryIndex, -1);
   assert.notEqual(sidepanelIndex, -1);
+  assert.ok(customSmsProviderIndex < smsRegistryIndex);
   assert.ok(definitionsIndex < sidepanelIndex);
 });
 

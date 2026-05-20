@@ -79,6 +79,9 @@ test('sidepanel html exposes phone verification toggle and multi-provider SMS ro
   assert.match(html, /data-signup-method="phone"/);
   assert.match(html, /id="row-phone-sms-provider"/);
   assert.match(html, /id="select-phone-sms-provider"/);
+  assert.match(html, /<option value="custom-sms">自定义接码<\/option>/);
+  assert.match(html, /id="row-custom-sms-phone-entries"/);
+  assert.match(html, /id="input-custom-sms-phone-entries"/);
   assert.match(html, /id="row-phone-sms-provider-order"/);
   assert.match(html, /id="select-phone-sms-provider-order"[^>]*multiple/);
   assert.match(html, /id="btn-phone-sms-provider-order-menu"/);
@@ -878,6 +881,10 @@ let latestState = {
     successfulUses: 2,
     maxUses: 3,
   },
+  customSmsPhoneEntries: [
+    '+19432832479----https://sms.985008.xyz/api/get_sms?key=44a6cd3506803f541223170605ffddda',
+    '+15729994724----https://sms.985008.xyz/api/get_sms?key=70ec1e403fc09b4e3bfa9b99802394f4',
+  ],
 };
 let cloudflareDomainEditMode = false;
 let cloudflareTempEmailDomainEditMode = false;
@@ -928,6 +935,7 @@ const inputFiveSimOperator = { value: 'any' };
 const inputFiveSimProduct = { value: 'openai' };
 const inputNexSmsApiKey = { value: 'nex-key' };
 const inputNexSmsServiceCode = { value: 'ot' };
+const inputCustomSmsPhoneEntries = null;
 const inputHeroSmsReuseEnabled = { checked: true };
 const selectHeroSmsAcquirePriority = { value: 'price' };
 function getSelectedPhonePreferredActivation() {
@@ -975,6 +983,7 @@ const DEFAULT_HERO_SMS_COUNTRY_LABEL = 'Thailand';
 const PHONE_SMS_PROVIDER_HERO_SMS = 'hero-sms';
 const PHONE_SMS_PROVIDER_FIVE_SIM = '5sim';
 const PHONE_SMS_PROVIDER_NEXSMS = 'nexsms';
+const PHONE_SMS_PROVIDER_CUSTOM_SMS = 'custom-sms';
 const DEFAULT_PHONE_SMS_PROVIDER = PHONE_SMS_PROVIDER_HERO_SMS;
 const SIGNUP_METHOD_EMAIL = 'email';
 const SIGNUP_METHOD_PHONE = 'phone';
@@ -1018,6 +1027,7 @@ ${extractFunction('normalizeFiveSimProductValue')}
 ${extractFunction('normalizeNexSmsCountryIdValue')}
 ${extractFunction('normalizeNexSmsCountryOrderValue')}
 ${extractFunction('normalizeNexSmsServiceCodeValue')}
+${extractFunction('normalizeCustomSmsPhoneEntries')}
 function getSelectedPhoneSmsProvider() { return normalizePhoneSmsProvider(selectPhoneSmsProvider?.value || latestState?.phoneSmsProvider); }
 function getSelectedPhoneSmsProviderOrder() { return ['nexsms', '5sim']; }
 ${extractFunction('normalizeFiveSimCountryId')}
@@ -1065,6 +1075,10 @@ return { collectSettingsPayload };
   assert.equal(payload.signupMethod, 'phone');
   assert.equal(payload.phoneSmsProvider, 'hero-sms');
   assert.deepStrictEqual(payload.phoneSmsProviderOrder, ['nexsms', '5sim']);
+  assert.deepStrictEqual(payload.customSmsPhoneEntries, [
+    '+19432832479----https://sms.985008.xyz/api/get_sms?key=44a6cd3506803f541223170605ffddda',
+    '+15729994724----https://sms.985008.xyz/api/get_sms?key=70ec1e403fc09b4e3bfa9b99802394f4',
+  ]);
   assert.equal(payload.accountRunHistoryTextEnabled, true);
   assert.equal(payload.accountRunHistoryHelperBaseUrl, 'http://127.0.0.1:17373');
   assert.equal(payload.heroSmsApiKey, 'demo-key');

@@ -27,6 +27,7 @@
       DEFAULT_NEX_SMS_BASE_URL = 'https://api.nexsms.net',
       DEFAULT_NEX_SMS_COUNTRY_ORDER = [1],
       DEFAULT_NEX_SMS_SERVICE_CODE = 'ot',
+      createCustomSmsProvider = null,
       DEFAULT_HERO_SMS_REUSE_ENABLED = true,
       createFiveSimProvider = null,
       HERO_SMS_COUNTRY_ID = 52,
@@ -190,6 +191,9 @@
       }
       if (normalized === PHONE_SMS_PROVIDER_NEXSMS) {
         return PHONE_SMS_PROVIDER_NEXSMS;
+      }
+      if (normalized === 'custom-sms') {
+        return 'custom-sms';
       }
       return PHONE_SMS_PROVIDER_HERO;
     }
@@ -905,6 +909,9 @@
       if (provider === PHONE_SMS_PROVIDER_NEXSMS) {
         return 'NexSMS';
       }
+      if (provider === 'custom-sms') {
+        return '自定义接码';
+      }
       return 'HeroSMS';
     }
 
@@ -1139,8 +1146,46 @@
       });
     }
 
+    function createResolvedCustomSmsProvider() {
+      const rootScope = typeof self !== 'undefined' ? self : globalThis;
+      const factory = createCustomSmsProvider || rootScope.PhoneSmsCustomSmsProvider?.createProvider;
+      if (typeof factory !== 'function') {
+        return null;
+      }
+      return factory({
+        addLog,
+        fetchImpl,
+        requestTimeoutMs: DEFAULT_PHONE_REQUEST_TIMEOUT_MS,
+        sleepWithStop,
+        throwIfStopped,
+      });
+    }
+
+    function createResolvedCustomSmsProvider() {
+      const rootScope = typeof self !== 'undefined' ? self : globalThis;
+      const factory = createCustomSmsProvider || rootScope.PhoneSmsCustomSmsProvider?.createProvider;
+      if (typeof factory !== 'function') {
+        return null;
+      }
+      return factory({
+        addLog,
+        fetchImpl,
+        requestTimeoutMs: DEFAULT_PHONE_REQUEST_TIMEOUT_MS,
+        sleepWithStop,
+        throwIfStopped,
+      });
+    }
+
     function getFiveSimProviderForState(_state = {}) {
       return createResolvedFiveSimProvider();
+    }
+
+    function getCustomSmsProviderForState(_state = {}) {
+      return createResolvedCustomSmsProvider();
+    }
+
+    function getCustomSmsProviderForState(_state = {}) {
+      return createResolvedCustomSmsProvider();
     }
 
     function normalizeFiveSimCountryId(value, fallback = 'england') {
@@ -3548,6 +3593,12 @@
     }
 
     async function requestPhoneActivation(state = {}, options = {}) {
+      if (normalizePhoneSmsProvider(state?.phoneSmsProvider) === 'custom-sms') {
+        const provider = getCustomSmsProviderForState(state);
+        if (provider) {
+          return provider.requestActivation(state, options);
+        }
+      }
       if (normalizePhoneSmsProvider(state?.phoneSmsProvider) === PHONE_SMS_PROVIDER_FIVE_SIM) {
         const provider = getFiveSimProviderForState(state);
         if (provider) {
@@ -4250,6 +4301,12 @@
       const normalizedActivation = normalizeActivation(activation);
       if (!normalizedActivation) {
         throw new Error('缺少手机号接码订单。');
+      }
+      if (getActivationProviderId(normalizedActivation, state) === 'custom-sms') {
+        const provider = getCustomSmsProviderForState(state);
+        if (provider) {
+          return provider.pollActivationCode(state, normalizedActivation, options);
+        }
       }
       if (getActivationProviderId(normalizedActivation, state) === PHONE_SMS_PROVIDER_FIVE_SIM) {
         const provider = getFiveSimProviderForState(state);

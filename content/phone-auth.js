@@ -206,6 +206,9 @@
       if (!digits) {
         return '';
       }
+      if (/^\+1\d{10}$/.test(String(value || '').replace(/\s+/g, ''))) {
+        return digits.slice(1);
+      }
       if (normalizedDialCode && digits.startsWith(normalizedDialCode) && digits.length > normalizedDialCode.length) {
         return digits.slice(normalizedDialCode.length);
       }

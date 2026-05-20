@@ -3,7 +3,7 @@
 })(typeof self !== 'undefined' ? self : globalThis, function createBackgroundPayPalApproveModule() {
   const PAYPAL_SOURCE = 'paypal-flow';
   const PLUS_CHECKOUT_SOURCE = 'plus-checkout';
-  const PAYPAL_INJECT_FILES = ['content/utils.js', 'content/operation-delay.js', 'content/paypal-flow.js'];
+  const PAYPAL_INJECT_FILES = ['content/utils.js', 'content/operation-delay.js', 'content/paypal-realtime-register.js', 'content/paypal-flow.js'];
   const PAYPAL_LOGIN_TRANSITION_TIMEOUT_MS = 30000;
   const PAYPAL_LOGIN_TRANSITION_POLL_MS = 500;
 
@@ -103,31 +103,12 @@
       return result || {};
     }
 
-    function resolvePayPalCredentials(state = {}) {
-      const currentId = String(state?.currentPayPalAccountId || '').trim();
-      const accounts = Array.isArray(state?.paypalAccounts) ? state.paypalAccounts : [];
-      const selectedAccount = currentId
-        ? accounts.find((account) => String(account?.id || '').trim() === currentId) || null
-        : null;
-      return {
-        email: String(selectedAccount?.email || state?.paypalEmail || '').trim(),
-        password: String(selectedAccount?.password || state?.paypalPassword || ''),
-      };
-    }
-
-    async function submitLogin(tabId, state = {}) {
-      const credentials = resolvePayPalCredentials(state);
-      if (!credentials.password) {
-        throw new Error('步骤 8：未配置可用的 PayPal 账号，请先在侧边栏添加并选择账号。');
-      }
-      await addLog('步骤 8：正在填写 PayPal 登录信息并提交...', 'info');
+    async function runRealtimeRegistration(tabId) {
+      await addLog('步骤 8：正在运行 PayPal 实时注册脚本...', 'info');
       const result = await sendTabMessageUntilStopped(tabId, PAYPAL_SOURCE, {
-        type: 'PAYPAL_SUBMIT_LOGIN',
+        type: 'PAYPAL_RUN_REALTIME_REGISTER',
         source: 'background',
-        payload: {
-          email: credentials.email,
-          password: credentials.password,
-        },
+        payload: {},
       });
       if (result?.error) {
         throw new Error(result.error);
@@ -246,20 +227,20 @@
         const pageState = await getPayPalState(tabId);
 
         if (pageState.needsLogin) {
-          const submitResult = await submitLogin(tabId, state);
-          const decision = await waitForPayPalPostLoginDecision(tabId, submitResult);
+          const registrationResult = await runRealtimeRegistration(tabId, state);
+          const decision = await waitForPayPalPostLoginDecision(tabId, registrationResult);
           if (decision.outcome === 'left_paypal') {
-            await addLog('步骤 8：PayPal 登录后已跳转离开登录/授权页，继续进入回跳确认。', 'ok');
+            await addLog('步骤 8：PayPal 实时注册后已跳转离开登录/授权页，继续进入回跳确认。', 'ok');
             break;
           }
           if (decision.outcome === 'password_ready') {
-            await addLog('步骤 8：PayPal 账号页提交后已识别到密码页，继续填写密码。', 'info');
+            await addLog('步骤 8：PayPal 实时注册脚本已进入下一页，继续运行脚本。', 'info');
           } else if (decision.outcome === 'approve_ready') {
-            await addLog('步骤 8：PayPal 登录后已识别到授权确认页，继续点击授权。', 'info');
+            await addLog('步骤 8：PayPal 实时注册后已识别到授权确认页，继续点击授权。', 'info');
           } else if (decision.outcome === 'prompt') {
-            await addLog('步骤 8：PayPal 登录后已识别到提示弹窗，继续处理弹窗。', 'info');
+            await addLog('步骤 8：PayPal 实时注册后已识别到提示弹窗，继续处理弹窗。', 'info');
           } else if (decision.outcome === 'timeout') {
-            await addLog('步骤 8：PayPal 登录动作后暂未识别到新页面，重新检查当前页面状态。', 'warn');
+            await addLog('步骤 8：PayPal 实时注册动作后暂未识别到新页面，重新检查当前页面状态。', 'warn');
           }
           loggedWaiting = false;
           continue;
