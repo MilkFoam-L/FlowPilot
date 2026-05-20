@@ -65,6 +65,7 @@ test('sidepanel step definitions keep the selected Plus payment method', () => {
   const bundle = [
     extractFunction('normalizeSignupMethod'),
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getStepDefinitionsForMode'),
     extractFunction('rebuildStepDefinitionState'),
     extractFunction('syncStepDefinitionsForMode'),
@@ -82,6 +83,11 @@ const window = {
 };
 let currentPlusModeEnabled = false;
 let currentPlusPaymentMethod = 'paypal';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
+let currentPlusAccountAccessStrategy = DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY;
 let currentSignupMethod = 'email';
 let currentPhoneSignupReloginAfterBindEmailEnabled = false;
 const DEFAULT_SIGNUP_METHOD = 'email';
@@ -107,7 +113,7 @@ return {
   assert.deepEqual(api.getStepIds(), [7]);
   assert.deepEqual(api.calls[0], {
     type: 'getSteps',
-    options: { activeFlowId: 'openai', plusModeEnabled: true, plusPaymentMethod: 'gopay', signupMethod: 'email', phoneSignupReloginAfterBindEmailEnabled: false },
+    options: { activeFlowId: 'openai', plusModeEnabled: true, plusPaymentMethod: 'gopay', plusAccountAccessStrategy: 'oauth', signupMethod: 'email', phoneSignupReloginAfterBindEmailEnabled: false },
   });
   assert.deepEqual(api.calls[1], { type: 'render', stepIds: [7] });
 });
@@ -141,7 +147,9 @@ test('sidepanel applies restored signup method when rebuilding shared step defin
 test('sidepanel Plus UI hides PayPal account selector while GoPay is selected', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -156,10 +164,15 @@ test('sidepanel Plus UI hides PayPal account selector while GoPay is selected', 
   const api = new Function(`
 let latestState = { plusPaymentMethod: 'gopay' };
 let currentPlusPaymentMethod = 'paypal';
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const selectPlusPaymentMethod = { value: 'gopay', style: { display: 'none' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const rowPayPalAccount = { style: { display: '' } };
 ${bundle}
 return { updatePlusModeUI, selectPlusPaymentMethod, rowPayPalAccount };
@@ -178,7 +191,9 @@ return { updatePlusModeUI, selectPlusPaymentMethod, rowPayPalAccount };
 test('sidepanel Plus UI can hide Plus controls when the shared flow capability registry disables them', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -206,6 +221,7 @@ const window = {
   },
 };
 let latestState = { plusPaymentMethod: 'paypal' };
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const rowPlusMode = { style: { display: '' } };
 const selectPlusPaymentMethod = { value: 'paypal', style: { display: '' } };
@@ -213,6 +229,10 @@ const rowPlusPaymentMethod = { style: { display: '' } };
 const rowPayPalAccount = { style: { display: '' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 ${bundle}
 return {
   rowPlusMode,
@@ -235,6 +255,7 @@ test('sidepanel step definitions keep GPC helper mode distinct', () => {
   const bundle = [
     extractFunction('normalizeSignupMethod'),
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getStepDefinitionsForMode'),
     extractFunction('rebuildStepDefinitionState'),
     extractFunction('syncStepDefinitionsForMode'),
@@ -252,6 +273,11 @@ const window = {
 };
 let currentPlusModeEnabled = false;
 let currentPlusPaymentMethod = 'paypal';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
+let currentPlusAccountAccessStrategy = DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY;
 let currentSignupMethod = 'email';
 let currentPhoneSignupReloginAfterBindEmailEnabled = false;
 const DEFAULT_SIGNUP_METHOD = 'email';
@@ -277,14 +303,16 @@ return {
   assert.deepEqual(api.getStepIds(), [13]);
   assert.deepEqual(api.calls[0], {
     type: 'getSteps',
-    options: { activeFlowId: 'openai', plusModeEnabled: true, plusPaymentMethod: 'gpc-helper', signupMethod: 'email', phoneSignupReloginAfterBindEmailEnabled: false },
+    options: { activeFlowId: 'openai', plusModeEnabled: true, plusPaymentMethod: 'gpc-helper', plusAccountAccessStrategy: 'oauth', signupMethod: 'email', phoneSignupReloginAfterBindEmailEnabled: false },
   });
 });
 
 test('sidepanel Plus UI shows GPC fields and purchase button only for GPC', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -299,10 +327,15 @@ test('sidepanel Plus UI shows GPC fields and purchase button only for GPC', () =
   const api = new Function(`
 let latestState = { plusPaymentMethod: 'gpc-helper', gopayHelperAutoModeEnabled: true };
 let currentPlusPaymentMethod = 'paypal';
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const selectPlusPaymentMethod = { value: 'gpc-helper', style: { display: 'none' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const plusPaymentMethodCaption = { textContent: '' };
 const btnGpcCardKeyPurchase = { style: { display: 'none' } };
 const rowPayPalAccount = { style: { display: '' } };
@@ -380,7 +413,9 @@ return {
 test('sidepanel keeps selected GPC auto mode when API Key has no auto permission', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -395,10 +430,15 @@ test('sidepanel keeps selected GPC auto mode when API Key has no auto permission
   const api = new Function(`
 let latestState = { plusPaymentMethod: 'gpc-helper', gopayHelperPhoneMode: 'auto', gopayHelperAutoModeEnabled: false, gopayHelperBalancePayload: { auto_mode_enabled: false } };
 let currentPlusPaymentMethod = 'gpc-helper';
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const selectPlusPaymentMethod = { value: 'gpc-helper', style: { display: 'none' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const plusPaymentMethodCaption = { textContent: '' };
 const btnGpcCardKeyPurchase = { style: { display: 'none' } };
 const rowPayPalAccount = { style: { display: '' } };
@@ -432,7 +472,9 @@ return { updatePlusModeUI, selectGpcHelperPhoneMode, plusPaymentMethodCaption, r
 test('sidepanel keeps selected GPC auto mode when persisted permission survives stop refresh', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -452,10 +494,15 @@ let latestState = {
   gopayHelperBalancePayload: { auto_mode_enabled: true },
 };
 let currentPlusPaymentMethod = 'gpc-helper';
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const selectPlusPaymentMethod = { value: 'gpc-helper', style: { display: 'none' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const plusPaymentMethodCaption = { textContent: '' };
 const rowPayPalAccount = { style: { display: '' } };
 const rowPlusPaymentMethod = { style: { display: 'none' } };
@@ -513,7 +560,9 @@ return {
 test('sidepanel keeps selected GPC auto mode before permission has been queried', () => {
   const bundle = [
     extractFunction('normalizePlusPaymentMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
     extractFunction('getSelectedPlusPaymentMethod'),
+    extractFunction('getRequestedPlusAccountAccessStrategy'),
     extractFunction('normalizeGpcHelperPhoneModeValue'),
     extractFunction('getGpcHelperAutoModeEnabled'),
     extractFunction('normalizeGpcAutoModePermissionValue'),
@@ -528,10 +577,15 @@ test('sidepanel keeps selected GPC auto mode before permission has been queried'
   const api = new Function(`
 let latestState = { plusPaymentMethod: 'gpc-helper', gopayHelperPhoneMode: 'auto', gopayHelperAutoModeEnabled: false, gopayHelperBalancePayload: null };
 let currentPlusPaymentMethod = 'gpc-helper';
+let currentPlusAccountAccessStrategy = 'oauth';
 const inputPlusModeEnabled = { checked: true };
 const selectPlusPaymentMethod = { value: 'gpc-helper', style: { display: 'none' } };
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const plusPaymentMethodCaption = { textContent: '' };
 const rowPayPalAccount = { style: { display: '' } };
 const rowPlusPaymentMethod = { style: { display: 'none' } };
@@ -699,6 +753,7 @@ test('sidepanel resolves pending GoPay manual confirmation from DATA_UPDATED sta
   const api = new Function(`
 const events = [];
 let latestState = {
+  activeFlowId: 'openai',
   plusManualConfirmationPending: true,
   plusManualConfirmationRequestId: 'gopay-request-1',
   plusManualConfirmationStep: 7,
@@ -753,6 +808,11 @@ return { events, syncPlusManualConfirmationDialog };
 
 test('sidepanel resolves pending GPC OTP with typed code', async () => {
   const bundle = [
+    extractFunction('normalizeSignupMethod'),
+    extractFunction('normalizePlusAccountAccessStrategy'),
+    extractFunction('normalizePlusStrategyTargetId'),
+    extractFunction('getPlusAccountAccessStrategyContinuationLabel'),
+    extractFunction('resolvePlusManualContinuationActionLabelFromState'),
     extractLastFunction('openPlusManualConfirmationDialog'),
     extractLastFunction('syncPlusManualConfirmationDialog'),
   ].join('\n');
@@ -769,6 +829,14 @@ let latestState = {
 };
 let activePlusManualConfirmationRequestId = '';
 let plusManualConfirmationDialogInFlight = false;
+const DEFAULT_ACTIVE_FLOW_ID = 'openai';
+const SIGNUP_METHOD_EMAIL = 'email';
+const SIGNUP_METHOD_PHONE = 'phone';
+const DEFAULT_SIGNUP_METHOD = 'email';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = 'oauth';
 const sharedFormDialog = {
   async open(options) {
     events.push({ type: 'form', options });

@@ -22,6 +22,7 @@ test('step definitions module exposes ordered normal and Plus step metadata', ()
   });
   const goPaySteps = api.getSteps({ plusModeEnabled: true, plusPaymentMethod: 'gopay' });
   const gpcSteps = api.getSteps({ plusModeEnabled: true, plusPaymentMethod: 'gpc-helper' });
+  const kiroSteps = api.getSteps({ activeFlowId: 'kiro' });
 
   assert.equal(Array.isArray(steps), true);
   assert.equal(steps.length, 11);
@@ -158,10 +159,55 @@ test('step definitions module exposes ordered normal and Plus step metadata', ()
   assert.deepStrictEqual(api.getStepIds({ plusModeEnabled: true, signupMethod: 'phone', phoneSignupReloginAfterBindEmailEnabled: true }), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
   assert.equal(api.getLastStepId({ plusModeEnabled: true, signupMethod: 'phone', phoneSignupReloginAfterBindEmailEnabled: true }), 18);
   assert.equal(api.hasFlow('openai'), true);
+  assert.equal(api.hasFlow('kiro'), true);
   assert.equal(api.hasFlow('site-a'), false);
-  assert.deepStrictEqual(api.getRegisteredFlowIds(), ['openai']);
+  assert.deepStrictEqual(api.getRegisteredFlowIds(), ['openai', 'kiro']);
   assert.deepStrictEqual(api.getSteps({ activeFlowId: 'site-a' }), []);
   assert.equal(api.getStepById(2, { activeFlowId: 'site-a' }), null);
+  assert.deepStrictEqual(
+    kiroSteps.map((step) => step.key),
+    [
+      'kiro-open-register-page',
+      'kiro-submit-email',
+      'kiro-submit-name',
+      'kiro-submit-verification-code',
+      'kiro-submit-password',
+      'kiro-complete-register-consent',
+      'kiro-start-desktop-authorize',
+      'kiro-complete-desktop-authorize',
+      'kiro-upload-credential',
+    ]
+  );
+  assert.equal(kiroSteps.every((step) => step.flowId === 'kiro'), true);
+  assert.equal(kiroSteps[0].driverId, 'background/kiro-register');
+  assert.equal(kiroSteps[8].sourceId, 'kiro-rs-admin');
+  assert.equal(kiroSteps[0].title, '打开注册页');
+  assert.equal(kiroSteps[1].title, '获取邮箱并继续');
+  assert.equal(kiroSteps[2].title, '填写姓名并继续');
+  assert.equal(kiroSteps[3].title, '获取验证码并继续');
+  assert.equal(kiroSteps[4].title, '设置密码并继续');
+  assert.equal(kiroSteps[5].title, '完成注册授权');
+  assert.equal(kiroSteps[6].title, '启动桌面授权');
+  assert.equal(kiroSteps[7].title, '完成桌面授权');
+  assert.equal(kiroSteps[8].title, '上传凭据到 kiro.rs');
+  const kiroContributionSteps = api.getSteps({ activeFlowId: 'kiro', accountContributionEnabled: true });
+  assert.equal(kiroContributionSteps[8].title, '贡献上传');
+  assert.deepStrictEqual(api.getStepIds({ activeFlowId: 'kiro' }), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  assert.equal(api.getLastStepId({ activeFlowId: 'kiro' }), 9);
+  assert.deepStrictEqual(
+    api.getNodes({ activeFlowId: 'kiro' }).map((node) => node.next),
+    [
+      ['kiro-submit-email'],
+      ['kiro-submit-name'],
+      ['kiro-submit-verification-code'],
+      ['kiro-submit-password'],
+      ['kiro-complete-register-consent'],
+      ['kiro-start-desktop-authorize'],
+      ['kiro-complete-desktop-authorize'],
+      ['kiro-upload-credential'],
+      [],
+    ]
+  );
   assert.equal(plusSteps[5].title, '创建 Plus Checkout');
   assert.equal(plusSteps[7].title, 'PayPal 登录与授权');
 
@@ -208,6 +254,151 @@ test('step definitions module exposes ordered normal and Plus step metadata', ()
   assert.equal(api.getLastStepId({ plusModeEnabled: true, plusPaymentMethod: 'gpc-helper' }), 14);
   assert.equal(gpcSteps[5].title, '创建 GPC 订单');
   assert.equal(gpcSteps[6].title, '等待 GPC 任务完成');
+});
+
+test('Plus session strategy swaps the OAuth tail for a single SUB2API import node', () => {
+  const source = fs.readFileSync('data/step-definitions.js', 'utf8');
+  const globalScope = {};
+  const api = new Function('self', `${source}; return self.MultiPageStepDefinitions;`)(globalScope);
+  const forbiddenTailKeys = [
+    'oauth-login',
+    'fetch-login-code',
+    'post-login-phone-verification',
+    'confirm-oauth',
+    'platform-verify',
+  ];
+
+  [
+    {
+      label: 'paypal',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'paypal',
+        plusAccountAccessStrategy: 'sub2api_codex_session',
+      },
+      previousNodeId: 'plus-checkout-return',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    },
+    {
+      label: 'gopay',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'gopay',
+        plusAccountAccessStrategy: 'sub2api_codex_session',
+      },
+      previousNodeId: 'gopay-subscription-confirm',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 10],
+    },
+    {
+      label: 'gpc-helper',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'gpc-helper',
+        plusAccountAccessStrategy: 'sub2api_codex_session',
+      },
+      previousNodeId: 'plus-checkout-billing',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 10],
+    },
+  ].forEach(({ label, options, previousNodeId, expectedStepIds }) => {
+    const steps = api.getSteps(options);
+    const nodes = api.getNodes(options);
+    const stepKeys = steps.map((step) => step.key);
+    const nodeIds = nodes.map((node) => node.nodeId);
+    const previousNode = nodes.find((node) => node.nodeId === previousNodeId);
+    const sessionImportNode = nodes.find((node) => node.nodeId === 'sub2api-session-import');
+
+    assert.equal(stepKeys.at(-1), 'sub2api-session-import', `${label} should end with session import`);
+    assert.equal(nodeIds.at(-1), 'sub2api-session-import', `${label} node order should end with session import`);
+    forbiddenTailKeys.forEach((key) => {
+      assert.equal(stepKeys.includes(key), false, `${label} should not keep ${key} in session mode`);
+      assert.equal(nodeIds.includes(key), false, `${label} nodes should not keep ${key} in session mode`);
+    });
+    assert.deepStrictEqual(api.getStepIds(options), expectedStepIds, `${label} step ids should follow the new tail`);
+    assert.equal(api.getLastStepId(options), expectedStepIds.at(-1), `${label} last step id should match session import`);
+    assert.deepStrictEqual(previousNode?.next, ['sub2api-session-import'], `${label} previous node should link to session import`);
+    assert.deepStrictEqual(sessionImportNode?.next, [], `${label} session import should be terminal`);
+  });
+});
+
+test('Plus phone signup never switches to SUB2API session tail even if the requested strategy is session import', () => {
+  const source = fs.readFileSync('data/step-definitions.js', 'utf8');
+  const globalScope = {};
+  const api = new Function('self', `${source}; return self.MultiPageStepDefinitions;`)(globalScope);
+  const steps = api.getSteps({
+    plusModeEnabled: true,
+    plusPaymentMethod: 'paypal',
+    signupMethod: 'phone',
+    plusAccountAccessStrategy: 'sub2api_codex_session',
+  });
+  const stepKeys = steps.map((step) => step.key);
+
+  assert.equal(stepKeys.includes('sub2api-session-import'), false);
+  assert.equal(stepKeys.includes('oauth-login'), true);
+  assert.equal(stepKeys.includes('platform-verify'), true);
+});
+
+test('Plus session strategy swaps the OAuth tail for a single CPA import node', () => {
+  const source = fs.readFileSync('data/step-definitions.js', 'utf8');
+  const globalScope = {};
+  const api = new Function('self', `${source}; return self.MultiPageStepDefinitions;`)(globalScope);
+  const forbiddenTailKeys = [
+    'oauth-login',
+    'fetch-login-code',
+    'post-login-phone-verification',
+    'confirm-oauth',
+    'platform-verify',
+  ];
+
+  [
+    {
+      label: 'paypal',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'paypal',
+        plusAccountAccessStrategy: 'cpa_codex_session',
+      },
+      previousNodeId: 'plus-checkout-return',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    },
+    {
+      label: 'gopay',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'gopay',
+        plusAccountAccessStrategy: 'cpa_codex_session',
+      },
+      previousNodeId: 'gopay-subscription-confirm',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 10],
+    },
+    {
+      label: 'gpc-helper',
+      options: {
+        plusModeEnabled: true,
+        plusPaymentMethod: 'gpc-helper',
+        plusAccountAccessStrategy: 'cpa_codex_session',
+      },
+      previousNodeId: 'plus-checkout-billing',
+      expectedStepIds: [1, 2, 3, 4, 5, 6, 7, 10],
+    },
+  ].forEach(({ label, options, previousNodeId, expectedStepIds }) => {
+    const steps = api.getSteps(options);
+    const nodes = api.getNodes(options);
+    const stepKeys = steps.map((step) => step.key);
+    const nodeIds = nodes.map((node) => node.nodeId);
+    const previousNode = nodes.find((node) => node.nodeId === previousNodeId);
+    const sessionImportNode = nodes.find((node) => node.nodeId === 'cpa-session-import');
+
+    assert.equal(stepKeys.at(-1), 'cpa-session-import', `${label} should end with CPA session import`);
+    assert.equal(nodeIds.at(-1), 'cpa-session-import', `${label} node order should end with CPA session import`);
+    forbiddenTailKeys.forEach((key) => {
+      assert.equal(stepKeys.includes(key), false, `${label} should not keep ${key} in CPA session mode`);
+      assert.equal(nodeIds.includes(key), false, `${label} nodes should not keep ${key} in CPA session mode`);
+    });
+    assert.deepStrictEqual(api.getStepIds(options), expectedStepIds, `${label} step ids should follow the CPA tail`);
+    assert.equal(api.getLastStepId(options), expectedStepIds.at(-1), `${label} last step id should match CPA session import`);
+    assert.deepStrictEqual(previousNode?.next, ['cpa-session-import'], `${label} previous node should link to CPA session import`);
+    assert.deepStrictEqual(sessionImportNode?.next, [], `${label} CPA session import should be terminal`);
+  });
 });
 
 test('sidepanel html loads shared step definitions before sidepanel bootstrap', () => {

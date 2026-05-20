@@ -36,14 +36,16 @@ const btnIgnoreRelease = document.getElementById('btn-ignore-release');
 const btnOpenRelease = document.getElementById('btn-open-release');
 const settingsCard = document.getElementById('settings-card');
 const selectFlow = document.getElementById('select-flow');
-const contributionModePanel = document.getElementById('contribution-mode-panel');
-const contributionModeBadge = document.getElementById('contribution-mode-badge');
-const contributionModeText = document.getElementById('contribution-mode-text');
+const accountContributionPanel = document.getElementById('contribution-mode-panel');
+const accountContributionBadge = document.getElementById('contribution-mode-badge');
+const accountContributionText = document.getElementById('contribution-mode-text');
 const inputContributionNickname = document.getElementById('input-contribution-nickname');
 const inputContributionQq = document.getElementById('input-contribution-qq');
+const contributionPrimaryStatusLabel = document.getElementById('contribution-primary-status-label');
+const contributionSecondaryStatusLabel = document.getElementById('contribution-secondary-status-label');
 const contributionOauthStatus = document.getElementById('contribution-oauth-status');
 const contributionCallbackStatus = document.getElementById('contribution-callback-status');
-const contributionModeSummary = document.getElementById('contribution-mode-summary');
+const accountContributionSummary = document.getElementById('contribution-mode-summary');
 const btnStartContribution = document.getElementById('btn-start-contribution');
 const btnOpenContributionUpload = document.getElementById('btn-open-contribution-upload');
 const btnExitContributionMode = document.getElementById('btn-exit-contribution-mode');
@@ -66,6 +68,11 @@ const contributionUpdateLayer = document.getElementById('contribution-update-lay
 const contributionUpdateHint = document.getElementById('contribution-update-hint');
 const contributionUpdateHintText = document.getElementById('contribution-update-hint-text');
 const btnDismissContributionUpdateHint = document.getElementById('btn-dismiss-contribution-update-hint');
+const autoRunAdBar = document.getElementById('auto-run-ad-bar');
+const autoRunAdViewport = document.getElementById('auto-run-ad-viewport');
+const autoRunAdTrack = document.getElementById('auto-run-ad-track');
+const autoRunAdText = document.getElementById('auto-run-ad-text');
+const autoRunAdTextClone = document.getElementById('auto-run-ad-text-clone');
 const stepsProgress = document.getElementById('steps-progress');
 const btnAutoRun = document.getElementById('btn-auto-run');
 const btnAutoContinue = document.getElementById('btn-auto-continue');
@@ -82,6 +89,7 @@ const configMenu = document.getElementById('config-menu');
 const btnExportSettings = document.getElementById('btn-export-settings');
 const btnImportSettings = document.getElementById('btn-import-settings');
 const inputImportSettingsFile = document.getElementById('input-import-settings-file');
+const labelSourceSelector = document.getElementById('label-source-selector');
 const selectPanelMode = document.getElementById('select-panel-mode');
 const rowVpsUrl = document.getElementById('row-vps-url');
 const inputVpsUrl = document.getElementById('input-vps-url');
@@ -170,6 +178,20 @@ const rowCodex2ApiUrl = document.getElementById('row-codex2api-url');
 const inputCodex2ApiUrl = document.getElementById('input-codex2api-url');
 const rowCodex2ApiAdminKey = document.getElementById('row-codex2api-admin-key');
 const inputCodex2ApiAdminKey = document.getElementById('input-codex2api-admin-key');
+const rowKiroRsUrl = document.getElementById('row-kiro-rs-url');
+const inputKiroRsUrl = document.getElementById('input-kiro-rs-url');
+const btnOpenKiroRsGithub = document.getElementById('btn-open-kiro-rs-github');
+const rowKiroRsKey = document.getElementById('row-kiro-rs-key');
+const inputKiroRsKey = document.getElementById('input-kiro-rs-key');
+const btnTestKiroRs = document.getElementById('btn-test-kiro-rs');
+const rowKiroRsTestStatus = document.getElementById('row-kiro-rs-test-status');
+const displayKiroRsTestStatus = document.getElementById('display-kiro-rs-test-status');
+const rowKiroWebStatus = document.getElementById('row-kiro-web-status');
+const displayKiroWebStatus = document.getElementById('display-kiro-web-status');
+const rowKiroLoginUrl = document.getElementById('row-kiro-login-url');
+const displayKiroLoginUrl = document.getElementById('display-kiro-login-url');
+const rowKiroUploadStatus = document.getElementById('row-kiro-upload-status');
+const displayKiroUploadStatus = document.getElementById('display-kiro-upload-status');
 const rowCustomPassword = document.getElementById('row-custom-password');
 const rowPlusMode = document.getElementById('row-plus-mode');
 const inputPlusModeEnabled = document.getElementById('input-plus-mode-enabled');
@@ -177,6 +199,9 @@ const rowPlusPaymentMethod = document.getElementById('row-plus-payment-method');
 const selectPlusPaymentMethod = document.getElementById('select-plus-payment-method');
 const btnGpcCardKeyPurchase = document.getElementById('btn-gpc-card-key-purchase');
 const plusPaymentMethodCaption = document.getElementById('plus-payment-method-caption');
+const rowPlusAccountAccessStrategy = document.getElementById('row-plus-account-access-strategy');
+const selectPlusAccountAccessStrategy = document.getElementById('select-plus-account-access-strategy');
+const plusAccountAccessStrategyCaption = document.getElementById('plus-account-access-strategy-caption');
 const rowPayPalAccount = document.getElementById('row-paypal-account');
 const selectPayPalAccount = document.getElementById('select-paypal-account');
 const payPalAccountPickerRoot = document.getElementById('paypal-account-picker');
@@ -386,7 +411,6 @@ const inputStep6CookieCleanupEnabled = document.getElementById('input-step6-cook
 const inputAutoDelayEnabled = document.getElementById('input-auto-delay-enabled');
 const inputAutoDelayMinutes = document.getElementById('input-auto-delay-minutes');
 const inputAutoStepDelaySeconds = document.getElementById('input-auto-step-delay-seconds');
-const inputOperationDelayEnabled = document.getElementById('input-operation-delay-enabled');
 const inputOAuthFlowTimeoutEnabled = document.getElementById('input-oauth-flow-timeout-enabled');
 const rowStepExecutionRange = document.getElementById('row-step-execution-range');
 const inputStepExecutionRangeEnabled = document.getElementById('input-step-execution-range-enabled');
@@ -530,6 +554,10 @@ const GPC_HELPER_PORTAL_URL = 'https://gpc.qlhazycoder.top/';
 const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
 const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
 const DEFAULT_PLUS_PAYMENT_METHOD = PLUS_PAYMENT_METHOD_PAYPAL;
+const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
+const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
+const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const SIGNUP_METHOD_EMAIL = 'email';
 const SIGNUP_METHOD_PHONE = 'phone';
 const DEFAULT_SIGNUP_METHOD = SIGNUP_METHOD_EMAIL;
@@ -539,10 +567,12 @@ const PHONE_SIGNUP_REUSE_LOCK_TITLE = '手机号注册流程不使用号码复�
 let latestState = null;
 let currentPlusModeEnabled = false;
 let currentPlusPaymentMethod = DEFAULT_PLUS_PAYMENT_METHOD;
+let currentPlusAccountAccessStrategy = DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY;
 let currentSignupMethod = DEFAULT_SIGNUP_METHOD;
 let currentPhoneSignupReloginAfterBindEmailEnabled = DEFAULT_PHONE_SIGNUP_RELOGIN_AFTER_BIND_EMAIL_ENABLED;
+let currentStepDefinitionFlowId = DEFAULT_ACTIVE_FLOW_ID;
 let phoneSignupReuseUiWasLocked = false;
-let lastConfirmedOperationDelayEnabled = true;
+let kiroRsConnectionTestStatusText = '未测试';
 let heroSmsCountrySelectionOrder = [];
 let phoneSmsProviderOrderSelection = [];
 let heroSmsCountryMenuSearchKeyword = '';
@@ -560,11 +590,13 @@ let nexSmsCountryMenuSearchKeyword = '';
 const nexSmsCountrySearchTextById = new Map();
 let stepDefinitions = getStepDefinitionsForMode(false, {
   plusPaymentMethod: currentPlusPaymentMethod,
+  plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
   signupMethod: currentSignupMethod,
   phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
 });
 let workflowNodes = getWorkflowNodesForMode(false, {
   plusPaymentMethod: currentPlusPaymentMethod,
+  plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
   signupMethod: currentSignupMethod,
   phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
 });
@@ -779,7 +811,7 @@ const AUTO_SKIP_FAILURES_PROMPT_DISMISSED_STORAGE_KEY = 'multipage-auto-skip-fai
 const AUTO_RUN_FALLBACK_RISK_PROMPT_DISMISSED_STORAGE_KEY = 'multipage-auto-run-fallback-risk-prompt-dismissed';
 const CPA_PHONE_SIGNUP_PROMPT_DISMISSED_STORAGE_KEY = 'multipage-cpa-phone-signup-prompt-dismissed';
 const CLOUDFLARE_TEMP_EMAIL_REGISTRATION_LOOKUP_PROMPT_DISMISSED_STORAGE_KEY = 'multipage-cloudflare-temp-email-registration-lookup-prompt-dismissed';
-const CPA_PHONE_SIGNUP_WARNING_MESSAGE = 'CPA 未适配手机号注册模式，认证成功后无法使用。请使用 SUB2API，或者认证成功后重新登录一遍进行解决。';
+const CPA_PHONE_SIGNUP_WARNING_MESSAGE = '请确保打开手机接码设置中的“绑定后重登”开关，不然可能无法使用（有些版本无需开启）';
 const PHONE_VERIFICATION_SECTION_EXPANDED_STORAGE_KEY = 'multipage-phone-verification-section-expanded';
 let phoneVerificationSectionExpanded = false;
 
@@ -825,15 +857,22 @@ function initPhoneVerificationSectionExpandedState() {
 function getStepDefinitionsForMode(plusModeEnabled = false, options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
   const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
+  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
   const rawPaymentMethod = typeof options === 'string'
     ? options
     : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
+  const rawPlusAccountAccessStrategy = typeof options === 'string'
+    ? currentPlusAccountAccessStrategy
+    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
   const rawSignupMethod = typeof options === 'string'
     ? currentSignupMethod
     : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
   const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
     ? currentPhoneSignupReloginAfterBindEmailEnabled
     : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const accountContributionEnabled = typeof options === 'string'
+    ? Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
+    : Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
   const activeFlowId = typeof options === 'string'
     ? ((typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId)
     : (options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId);
@@ -841,8 +880,10 @@ function getStepDefinitionsForMode(plusModeEnabled = false, options = {}) {
     activeFlowId: String(activeFlowId || '').trim().toLowerCase() || defaultFlowId,
     plusModeEnabled,
     plusPaymentMethod: normalizePlusPaymentMethod(rawPaymentMethod),
+    plusAccountAccessStrategy: normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy),
     signupMethod: normalizeSignupMethod(rawSignupMethod),
     phoneSignupReloginAfterBindEmailEnabled,
+    accountContributionEnabled,
   }) || [])
     .sort((left, right) => {
       const leftOrder = Number.isFinite(left.order) ? left.order : left.id;
@@ -855,15 +896,22 @@ function getStepDefinitionsForMode(plusModeEnabled = false, options = {}) {
 function getWorkflowNodesForMode(plusModeEnabled = false, options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
   const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
+  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
   const rawPaymentMethod = typeof options === 'string'
     ? options
     : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
+  const rawPlusAccountAccessStrategy = typeof options === 'string'
+    ? currentPlusAccountAccessStrategy
+    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
   const rawSignupMethod = typeof options === 'string'
     ? currentSignupMethod
     : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
   const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
     ? currentPhoneSignupReloginAfterBindEmailEnabled
     : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const accountContributionEnabled = typeof options === 'string'
+    ? Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
+    : Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
   const activeFlowId = typeof options === 'string'
     ? ((typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId)
     : (options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId);
@@ -871,23 +919,24 @@ function getWorkflowNodesForMode(plusModeEnabled = false, options = {}) {
     activeFlowId: String(activeFlowId || '').trim().toLowerCase() || defaultFlowId,
     plusModeEnabled,
     plusPaymentMethod: normalizePlusPaymentMethod(rawPaymentMethod),
+    plusAccountAccessStrategy: normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy),
     signupMethod: normalizeSignupMethod(rawSignupMethod),
     phoneSignupReloginAfterBindEmailEnabled,
+    accountContributionEnabled,
   });
   if (Array.isArray(nodes) && nodes.length) {
     return nodes.slice().sort((left, right) => {
-      const leftOrder = Number.isFinite(Number(left.displayOrder)) ? Number(left.displayOrder) : Number(left.legacyStepId);
-      const rightOrder = Number.isFinite(Number(right.displayOrder)) ? Number(right.displayOrder) : Number(right.legacyStepId);
+      const leftOrder = Number.isFinite(Number(left.displayOrder)) ? Number(left.displayOrder) : 0;
+      const rightOrder = Number.isFinite(Number(right.displayOrder)) ? Number(right.displayOrder) : 0;
       if (leftOrder !== rightOrder) return leftOrder - rightOrder;
       return String(left.nodeId || '').localeCompare(String(right.nodeId || ''));
     });
   }
 
   return getStepDefinitionsForMode(plusModeEnabled, options).map((step) => ({
-    legacyStepId: Number(step.id),
     nodeId: String(step.key || '').trim(),
     title: step.title,
-    displayOrder: Number.isFinite(Number(step.order)) ? Number(step.order) : Number(step.id),
+    displayOrder: Number.isFinite(Number(step.id)) ? Number(step.id) : Number(step.order),
     executeKey: String(step.key || '').trim(),
   })).filter((node) => node.nodeId);
 }
@@ -903,7 +952,7 @@ function getStepIdByKeyForCurrentMode(stepKey = '') {
 
 function getNodeIdByStepForCurrentMode(step) {
   const numericStep = Number(step);
-  const node = (workflowNodes || []).find((candidate) => Number(candidate?.legacyStepId) === numericStep);
+  const node = (workflowNodes || []).find((candidate) => Number(candidate?.displayOrder) === numericStep);
   if (node?.nodeId) {
     return String(node.nodeId).trim();
   }
@@ -917,46 +966,67 @@ function getStepIdByNodeIdForCurrentMode(nodeId = '') {
     return 0;
   }
   const node = (workflowNodes || []).find((candidate) => String(candidate?.nodeId || '').trim() === normalizedNodeId);
-  const legacyStepId = Number(node?.legacyStepId);
-  if (Number.isInteger(legacyStepId) && legacyStepId > 0) {
-    return legacyStepId;
+  const displayOrder = Number(node?.displayOrder);
+  if (Number.isInteger(displayOrder) && displayOrder > 0) {
+    return displayOrder;
   }
   return getStepIdByKeyForCurrentMode(normalizedNodeId);
 }
 
 function rebuildStepDefinitionState(plusModeEnabled = false, options = {}) {
   currentPlusModeEnabled = Boolean(plusModeEnabled);
+  const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
   const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
+  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
   const rawPaymentMethod = typeof options === 'string'
     ? options
     : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
+  const rawPlusAccountAccessStrategy = typeof options === 'string'
+    ? currentPlusAccountAccessStrategy
+    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
   const rawSignupMethod = typeof options === 'string'
     ? currentSignupMethod
     : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
   const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
     ? currentPhoneSignupReloginAfterBindEmailEnabled
     : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const accountContributionEnabled = Boolean(
+    options.accountContributionEnabled
+    ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
+  );
   currentPlusPaymentMethod = normalizePlusPaymentMethod(rawPaymentMethod);
+  currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy);
   currentSignupMethod = normalizeSignupMethod(rawSignupMethod);
   currentPhoneSignupReloginAfterBindEmailEnabled = phoneSignupReloginAfterBindEmailEnabled;
+  const nextActiveFlowId = String(
+    options?.activeFlowId
+    || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '')
+    || defaultFlowId
+  ).trim().toLowerCase() || defaultFlowId;
+  if (typeof currentStepDefinitionFlowId !== 'undefined') {
+    currentStepDefinitionFlowId = nextActiveFlowId;
+  }
   stepDefinitions = getStepDefinitionsForMode(currentPlusModeEnabled, {
-    activeFlowId: options?.activeFlowId,
+    activeFlowId: nextActiveFlowId,
     plusPaymentMethod: currentPlusPaymentMethod,
+    plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
     signupMethod: currentSignupMethod,
     phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
+    accountContributionEnabled,
   });
   const nextWorkflowNodes = typeof getWorkflowNodesForMode === 'function'
     ? getWorkflowNodesForMode(currentPlusModeEnabled, {
-      activeFlowId: options?.activeFlowId,
+      activeFlowId: nextActiveFlowId,
       plusPaymentMethod: currentPlusPaymentMethod,
+      plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
       signupMethod: currentSignupMethod,
       phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
+      accountContributionEnabled,
     })
     : stepDefinitions.map((step) => ({
-      legacyStepId: Number(step.id),
       nodeId: String(step.key || step.id || '').trim(),
       title: step.title,
-      displayOrder: Number.isFinite(Number(step.order)) ? Number(step.order) : Number(step.id),
+      displayOrder: Number.isFinite(Number(step.id)) ? Number(step.id) : Number(step.order),
     }));
   if (typeof workflowNodes !== 'undefined') {
     workflowNodes = nextWorkflowNodes;
@@ -1300,6 +1370,7 @@ let configActionInFlight = false;
 let currentReleaseSnapshot = null;
 let currentContributionContentSnapshot = null;
 let contributionContentSnapshotRequestInFlight = null;
+let autoRunAdScrollSyncFrame = 0;
 
 function normalizeAutomationWindowId(value) {
   if (value === null || value === undefined || value === '') {
@@ -1481,6 +1552,50 @@ let customEmailPoolEntriesState = [];
 
 const EYE_OPEN_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const EYE_CLOSED_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19C5 19 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/><path d="M9.9 4.24A10.94 10.94 0 0 1 12 5c7 0 11 7 11 7a21.86 21.86 0 0 1-2.16 3.19"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>';
+const PRIVACY_MASKED_INPUT_IDS = Object.freeze([
+  'input-contribution-qq',
+  'input-sub2api-url',
+  'input-sub2api-email',
+  'input-sub2api-default-proxy',
+  'input-codex2api-url',
+  'input-kiro-rs-url',
+  'input-gpc-helper-api',
+  'input-gpc-helper-phone',
+  'input-gpc-helper-local-sms-url',
+  'input-gopay-phone',
+  'input-gopay-otp',
+  'input-email-prefix',
+  'input-inbucket-host',
+  'input-inbucket-mailbox',
+  'input-email',
+  'input-temp-email-base-url',
+  'input-temp-email-receive-mailbox',
+  'input-cloud-mail-base-url',
+  'input-cloud-mail-admin-email',
+  'input-cloud-mail-receive-mailbox',
+  'input-cloud-mail-domain',
+  'input-yyds-mail-base-url',
+  'input-hotmail-remote-base-url',
+  'input-hotmail-local-base-url',
+  'input-hotmail-email',
+  'input-hotmail-client-id',
+  'input-mail2925-email',
+  'input-luckmail-base-url',
+  'input-luckmail-domain',
+  'input-ip-proxy-account-session-prefix',
+  'input-ip-proxy-host',
+  'input-ip-proxy-region',
+  'input-account-run-history-helper-base-url',
+  'input-free-reusable-phone',
+  'input-signup-phone',
+]);
+const PRIVACY_MASKED_TEXTAREA_IDS = Object.freeze([
+  'input-custom-mail-provider-pool',
+  'input-custom-email-pool-import',
+  'input-hotmail-import',
+  'input-mail2925-import',
+  'input-ip-proxy-account-list',
+]);
 const COPY_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
 const parseHotmailImportText = window.HotmailUtils?.parseHotmailImportText;
 const normalizeHotmailServiceModeFromUtils = window.HotmailUtils?.normalizeHotmailServiceMode;
@@ -1879,6 +1994,19 @@ async function openConfirmModalWithOption({
 
 async function openPlusManualConfirmationDialog(options = {}) {
   const method = String(options.method || '').trim().toLowerCase();
+  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
+  const panelMode = String(latestState?.panelMode || latestState?.openaiIntegrationTargetId || '').trim().toLowerCase();
+  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
+  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
+  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
+  const useSub2ApiSessionImport = plusModeEnabled
+    && activeFlowId === 'openai'
+    && panelMode === 'sub2api'
+    && signupMethod === 'email'
+    && plusAccountAccessStrategy === 'sub2api_codex_session';
+  const continuationActionLabel = useSub2ApiSessionImport
+    ? '导入当前 ChatGPT 会话到 SUB2API'
+    : 'OAuth 登录';
   const title = String(options.title || '').trim() || (method === 'gopay' ? 'GoPay 订阅确认' : '手动确认');
   const message = String(options.message || '').trim()
     || (method === 'gopay'
@@ -1892,7 +2020,7 @@ async function openPlusManualConfirmationDialog(options = {}) {
       { id: 'confirm', label: '我已完成订阅', variant: 'btn-primary' },
     ],
     alert: method === 'gopay'
-      ? { text: '确认后流程会直接继续到 Plus 模式第 10 步 OAuth 登录。', tone: 'info' }
+      ? { text: `确认后流程会直接继续到 Plus 模式后续的${continuationActionLabel}。`, tone: 'info' }
       : null,
   });
 }
@@ -1906,6 +2034,19 @@ async function syncPlusManualConfirmationDialog() {
 
   const step = Number(latestState?.plusManualConfirmationStep) || 0;
   const method = String(latestState?.plusManualConfirmationMethod || '').trim().toLowerCase();
+  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
+  const panelMode = String(latestState?.panelMode || latestState?.openaiIntegrationTargetId || '').trim().toLowerCase();
+  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
+  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
+  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
+  const useSub2ApiSessionImport = plusModeEnabled
+    && activeFlowId === 'openai'
+    && panelMode === 'sub2api'
+    && signupMethod === 'email'
+    && plusAccountAccessStrategy === 'sub2api_codex_session';
+  const continuationActionLabel = useSub2ApiSessionImport
+    ? '导入当前 ChatGPT 会话到 SUB2API'
+    : 'OAuth 登录';
   const title = latestState?.plusManualConfirmationTitle;
   const message = latestState?.plusManualConfirmationMessage;
   activePlusManualConfirmationRequestId = requestId;
@@ -1943,7 +2084,7 @@ async function syncPlusManualConfirmationDialog() {
       throw new Error(response.error);
     }
     if (confirmed) {
-      showToast(method === 'gopay' ? 'GoPay 订阅已确认，正在继续 OAuth 登录...' : '已确认，流程继续执行中...', 'info', 2200);
+      showToast(method === 'gopay' ? `GoPay 订阅已确认，正在继续${continuationActionLabel}...` : '已确认，流程继续执行中...', 'info', 2200);
     } else {
       showToast(method === 'gopay' ? '已取消 GoPay 订阅等待。' : '已取消当前手动确认。', 'warn', 2200);
     }
@@ -1993,7 +2134,9 @@ function shouldPromptNewUserGuide() {
   if (!btnContributionMode || btnContributionMode.disabled) {
     return false;
   }
-  if (latestState?.contributionMode) {
+  if (typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState)
+    : Boolean(latestState?.accountContributionEnabled)) {
     return false;
   }
   return true;
@@ -2001,6 +2144,18 @@ function shouldPromptNewUserGuide() {
 
 function getContributionPortalUrl() {
   return String(contributionContentService?.portalUrl || 'https://flowpilot.qlhazycoder.top').trim();
+}
+
+function getContributionContentFlowId(state = latestState) {
+  return String(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
+}
+
+function getContributionContentTargetId(state = latestState) {
+  const flowId = getContributionContentFlowId(state);
+  if (flowId === 'kiro') {
+    return String(state?.kiroTargetId || state?.targetId || 'kiro-rs').trim().toLowerCase() || 'kiro-rs';
+  }
+  return String(state?.openaiIntegrationTargetId || state?.panelMode || state?.targetId || 'cpa').trim().toLowerCase() || 'cpa';
 }
 
 function openNewUserGuidePrompt() {
@@ -2031,16 +2186,29 @@ async function maybeShowNewUserGuidePrompt() {
   return false;
 }
 
-function getDismissedContributionContentPromptVersion() {
-  return String(localStorage.getItem(CONTRIBUTION_CONTENT_PROMPT_DISMISSED_VERSION_STORAGE_KEY) || '').trim();
+function getContributionContentPromptScope(snapshot = currentContributionContentSnapshot) {
+  return {
+    flowId: String(snapshot?.flowId || getContributionContentFlowId()).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID,
+    targetId: String(snapshot?.targetId || getContributionContentTargetId()).trim().toLowerCase() || 'cpa',
+  };
 }
 
-function setDismissedContributionContentPromptVersion(version) {
+function getContributionContentPromptDismissedStorageKey(snapshot = currentContributionContentSnapshot) {
+  const scope = getContributionContentPromptScope(snapshot);
+  return `${CONTRIBUTION_CONTENT_PROMPT_DISMISSED_VERSION_STORAGE_KEY}:${scope.flowId}:${scope.targetId}`;
+}
+
+function getDismissedContributionContentPromptVersion(snapshot = currentContributionContentSnapshot) {
+  return String(localStorage.getItem(getContributionContentPromptDismissedStorageKey(snapshot)) || '').trim();
+}
+
+function setDismissedContributionContentPromptVersion(version, snapshot = currentContributionContentSnapshot) {
   const normalized = String(version || '').trim();
+  const storageKey = getContributionContentPromptDismissedStorageKey(snapshot);
   if (normalized) {
-    localStorage.setItem(CONTRIBUTION_CONTENT_PROMPT_DISMISSED_VERSION_STORAGE_KEY, normalized);
+    localStorage.setItem(storageKey, normalized);
   } else {
-    localStorage.removeItem(CONTRIBUTION_CONTENT_PROMPT_DISMISSED_VERSION_STORAGE_KEY);
+    localStorage.removeItem(storageKey);
   }
 }
 
@@ -2220,23 +2388,25 @@ async function openAutoRunFallbackRiskConfirmModal(totalRuns) {
 
 function updateConfigMenuControls() {
   const disabled = configActionInFlight || settingsSaveInFlight;
-  const contributionModeEnabled = Boolean(latestState?.contributionMode);
-  if (contributionModeEnabled && configMenuOpen) {
+  const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState)
+    : Boolean(latestState?.accountContributionEnabled);
+  if (accountContributionEnabled && configMenuOpen) {
     configMenuOpen = false;
   }
   const importLocked = disabled
-    || contributionModeEnabled
+    || accountContributionEnabled
     || currentAutoRun.autoRunning
     || Object.values(getStepStatuses()).some((status) => status === 'running');
   if (btnConfigMenu) {
-    btnConfigMenu.disabled = disabled || contributionModeEnabled;
+    btnConfigMenu.disabled = disabled || accountContributionEnabled;
     btnConfigMenu.setAttribute('aria-expanded', String(configMenuOpen));
   }
   if (configMenu) {
-    configMenu.hidden = contributionModeEnabled || !configMenuOpen;
+    configMenu.hidden = accountContributionEnabled || !configMenuOpen;
   }
   if (btnExportSettings) {
-    btnExportSettings.disabled = disabled || contributionModeEnabled;
+    btnExportSettings.disabled = disabled || accountContributionEnabled;
   }
   if (btnImportSettings) {
     btnImportSettings.disabled = importLocked;
@@ -2352,6 +2522,44 @@ function normalizeStepExecutionRangeEntry(value = {}) {
   };
 }
 
+function getKiroUploadStatusLabel(value = '') {
+  const rawValue = String(value || '').trim();
+  if (!rawValue) {
+    return '未开始';
+  }
+
+  const normalizedValue = rawValue.toLowerCase();
+  switch (normalizedValue) {
+    case 'waiting_login':
+      return '等待登录授权';
+    case 'ready_to_upload':
+      return '等待上传';
+    case 'uploading':
+      return '上传中';
+    case 'uploaded':
+    case 'credential uploaded.':
+      return '上传成功';
+    case 'error':
+      return '上传失败';
+    case 'waiting_user':
+      return '等待用户确认';
+    case 'authorized':
+      return '已授权';
+    case 'expired':
+      return '已过期';
+    default:
+      return rawValue;
+  }
+}
+
+function setKiroRsConnectionTestStatus(message = '') {
+  const nextText = String(message || '').trim() || '未测试';
+  kiroRsConnectionTestStatusText = nextText;
+  if (typeof displayKiroRsTestStatus !== 'undefined' && displayKiroRsTestStatus) {
+    displayKiroRsTestStatus.textContent = nextText;
+  }
+}
+
 function normalizeStepExecutionRangeByFlow(value = {}) {
   const source = isPlainObjectValue(value) ? value : {};
   const next = {};
@@ -2385,24 +2593,76 @@ function getLastCurrentStepId() {
   return STEP_IDS.length ? Math.max(...STEP_IDS) : 1;
 }
 
+function getStepExecutionRangeNodes() {
+  return Array.isArray(workflowNodes)
+    ? workflowNodes.filter((node) => String(node?.nodeId || '').trim())
+    : [];
+}
+
+function getStepExecutionRangeNodeLabel(node = {}) {
+  const nodeId = String(node?.nodeId || '').trim();
+  const displayOrder = Number(node?.displayOrder);
+  const title = String(node?.title || nodeId).trim();
+  const orderLabel = Number.isInteger(displayOrder) && displayOrder > 0
+    ? `步骤 ${displayOrder}`
+    : nodeId;
+  return title ? `${orderLabel} · ${title}` : orderLabel;
+}
+
+function getStepExecutionRangeBoundaryNodeId(stepNumber, boundary = 'start') {
+  const nodes = getStepExecutionRangeNodes();
+  const fallbackNode = boundary === 'end' ? nodes[nodes.length - 1] : nodes[0];
+  const resolvedNodeId = getNodeIdByStepForCurrentMode(stepNumber);
+  return String(resolvedNodeId || fallbackNode?.nodeId || '').trim();
+}
+
+function syncStepExecutionRangeSelectOptions(selectedFromNodeId = '', selectedToNodeId = '') {
+  const nodes = getStepExecutionRangeNodes();
+  const fromSelect = inputStepExecutionRangeFrom;
+  const toSelect = inputStepExecutionRangeTo;
+  if (!fromSelect || !toSelect) {
+    return;
+  }
+
+  const buildOptions = (selectedValue) => nodes.map((node) => {
+    const nodeId = String(node?.nodeId || '').trim();
+    const label = getStepExecutionRangeNodeLabel(node);
+    return `<option value="${escapeHtml(nodeId)}"${nodeId === selectedValue ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+  }).join('');
+
+  fromSelect.innerHTML = buildOptions(String(selectedFromNodeId || nodes[0]?.nodeId || '').trim());
+  toSelect.innerHTML = buildOptions(String(selectedToNodeId || nodes[nodes.length - 1]?.nodeId || '').trim());
+}
+
 function isStepExecutionRangeUiAvailable(state = latestState) {
   return getCurrentStepExecutionRangeFlowId(state) === DEFAULT_ACTIVE_FLOW_ID;
 }
 
 function clampStepExecutionRangeInputs() {
-  const maxStep = getLastCurrentStepId();
-  const fromStep = Math.min(maxStep, Math.max(1, normalizePositiveStepNumber(inputStepExecutionRangeFrom?.value, 1)));
-  const toStep = Math.min(maxStep, Math.max(1, normalizePositiveStepNumber(inputStepExecutionRangeTo?.value, maxStep)));
-  const normalizedFrom = Math.min(fromStep, toStep);
-  const normalizedTo = Math.max(fromStep, toStep);
+  const nodes = getStepExecutionRangeNodes();
+  const firstNodeId = String(nodes[0]?.nodeId || '').trim();
+  const lastNodeId = String(nodes[nodes.length - 1]?.nodeId || '').trim();
+  const selectedFromNodeId = String(inputStepExecutionRangeFrom?.value || firstNodeId).trim() || firstNodeId;
+  const selectedToNodeId = String(inputStepExecutionRangeTo?.value || lastNodeId).trim() || lastNodeId;
+  const fromStep = Math.max(1, getStepIdByNodeIdForCurrentMode(selectedFromNodeId) || 1);
+  const toStep = Math.max(1, getStepIdByNodeIdForCurrentMode(selectedToNodeId) || fromStep);
+  const normalizedFromStep = Math.min(fromStep, toStep);
+  const normalizedToStep = Math.max(fromStep, toStep);
+  const normalizedFromNodeId = getStepExecutionRangeBoundaryNodeId(normalizedFromStep, 'start');
+  const normalizedToNodeId = getStepExecutionRangeBoundaryNodeId(normalizedToStep, 'end');
+  syncStepExecutionRangeSelectOptions(normalizedFromNodeId, normalizedToNodeId);
   if (inputStepExecutionRangeFrom) {
-    inputStepExecutionRangeFrom.max = String(maxStep);
-    inputStepExecutionRangeFrom.value = String(normalizedFrom);
+    inputStepExecutionRangeFrom.value = normalizedFromNodeId;
   }
   if (inputStepExecutionRangeTo) {
-    inputStepExecutionRangeTo.max = String(maxStep);
-    inputStepExecutionRangeTo.value = String(normalizedTo);
+    inputStepExecutionRangeTo.value = normalizedToNodeId;
   }
+  return {
+    fromNodeId: normalizedFromNodeId,
+    toNodeId: normalizedToNodeId,
+    fromStep: normalizedFromStep,
+    toStep: normalizedToStep,
+  };
 }
 
 function buildStepExecutionRangeByFlowPayload(existingConfig = latestState?.stepExecutionRangeByFlow || {}) {
@@ -2410,12 +2670,12 @@ function buildStepExecutionRangeByFlowPayload(existingConfig = latestState?.step
   if (!isStepExecutionRangeUiAvailable(latestState)) {
     return config;
   }
-  clampStepExecutionRangeInputs();
+  const normalizedRange = clampStepExecutionRangeInputs();
   const flowId = getCurrentStepExecutionRangeFlowId(latestState);
   config[flowId] = normalizeStepExecutionRangeEntry({
     enabled: Boolean(inputStepExecutionRangeEnabled?.checked),
-    fromStep: inputStepExecutionRangeFrom?.value,
-    toStep: inputStepExecutionRangeTo?.value,
+    fromStep: normalizedRange?.fromStep,
+    toStep: normalizedRange?.toStep,
   });
   return config;
 }
@@ -2442,17 +2702,15 @@ function applyStepExecutionRangeState(state = latestState) {
   }
   const available = isStepExecutionRangeUiAvailable(state);
   rowStepExecutionRange.style.display = available ? '' : 'none';
-  const maxStep = getLastCurrentStepId();
   const range = getStepExecutionRangeForCurrentFlow(state);
+  const fromNodeId = getStepExecutionRangeBoundaryNodeId(range.fromStep, 'start');
+  const toNodeId = getStepExecutionRangeBoundaryNodeId(range.toStep, 'end');
+  syncStepExecutionRangeSelectOptions(fromNodeId, toNodeId);
   if (inputStepExecutionRangeFrom) {
-    inputStepExecutionRangeFrom.min = '1';
-    inputStepExecutionRangeFrom.max = String(maxStep);
-    inputStepExecutionRangeFrom.value = String(Math.min(maxStep, Math.max(1, normalizePositiveStepNumber(range.fromStep, 1))));
+    inputStepExecutionRangeFrom.value = fromNodeId;
   }
   if (inputStepExecutionRangeTo) {
-    inputStepExecutionRangeTo.min = '1';
-    inputStepExecutionRangeTo.max = String(maxStep);
-    inputStepExecutionRangeTo.value = String(Math.min(maxStep, Math.max(1, normalizePositiveStepNumber(range.toStep, maxStep))));
+    inputStepExecutionRangeTo.value = toNodeId;
   }
   if (inputStepExecutionRangeEnabled) {
     inputStepExecutionRangeEnabled.checked = Boolean(range.enabled);
@@ -2566,19 +2824,49 @@ function shouldOfferAutoModeChoice(state = latestState) {
 }
 
 function syncLatestState(nextState) {
-  const mergedNodeStatuses = nextState?.nodeStatuses
+  const normalizedNextState = {
+    ...(nextState || {}),
+  };
+  if (
+    Object.prototype.hasOwnProperty.call(normalizedNextState, 'activeFlowId')
+    || Object.prototype.hasOwnProperty.call(normalizedNextState, 'flowId')
+  ) {
+    const fallbackFlowId = latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID;
+    const rawFlowId = Object.prototype.hasOwnProperty.call(normalizedNextState, 'activeFlowId')
+      ? normalizedNextState.activeFlowId
+      : normalizedNextState.flowId;
+    const normalizedFlowId = typeof normalizeFlowId === 'function'
+      ? normalizeFlowId(rawFlowId, fallbackFlowId)
+      : (String(rawFlowId || fallbackFlowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID);
+    normalizedNextState.activeFlowId = normalizedFlowId;
+    normalizedNextState.flowId = normalizedFlowId;
+  }
+  const mergedNodeStatuses = normalizedNextState?.nodeStatuses
     ? getStoredNodeStatuses({
-      nodeStatuses: { ...NODE_DEFAULT_STATUSES, ...(latestState?.nodeStatuses || {}), ...nextState.nodeStatuses },
+      nodeStatuses: { ...NODE_DEFAULT_STATUSES, ...(latestState?.nodeStatuses || {}), ...normalizedNextState.nodeStatuses },
     })
     : getStoredNodeStatuses(latestState);
 
   latestState = {
     ...(latestState || {}),
-    ...(nextState || {}),
+    ...normalizedNextState,
     nodeStatuses: mergedNodeStatuses,
   };
 
   renderAccountRecords(latestState);
+}
+
+function isContributionModeActiveForFlow(state = latestState, flowId = undefined) {
+  const rawFlowId = flowId !== undefined
+    ? flowId
+    : (state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID);
+  const normalizedFlowId = typeof normalizeFlowId === 'function'
+    ? normalizeFlowId(rawFlowId, DEFAULT_ACTIVE_FLOW_ID)
+    : (String(rawFlowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID);
+  const stateFlowId = typeof normalizeFlowId === 'function'
+    ? normalizeFlowId(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID, DEFAULT_ACTIVE_FLOW_ID)
+    : (String(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID);
+  return normalizedFlowId === stateFlowId && Boolean(state?.accountContributionEnabled);
 }
 
 let accountRunHistoryRefreshTimer = null;
@@ -2599,7 +2887,7 @@ function scheduleAccountRunHistoryRefresh(delayMs = 150) {
 }
 
 function normalizeOperationDelayEnabled(value) {
-  return typeof value === 'boolean' ? value : true;
+  return true;
 }
 
 function appendOperationDelayLog(enabled, level = 'info', message = '') {
@@ -2607,15 +2895,13 @@ function appendOperationDelayLog(enabled, level = 'info', message = '') {
     timestamp: Date.now(),
     level,
     message: message || (enabled
-      ? '操作间延迟已开启：页面输入、选择、点击、提交、继续、授权后等待 2 秒。'
-      : '操作间延迟已关闭：页面操作将连续执行。'),
+      ? '操作间延迟已固定开启。'
+      : '操作间延迟保持固定开启。'),
   });
 }
 
 function applyOperationDelayState(state = latestState, options = {}) {
   const enabled = options.restoreFailed ? true : normalizeOperationDelayEnabled(state?.operationDelayEnabled);
-  lastConfirmedOperationDelayEnabled = enabled;
-  if (inputOperationDelayEnabled) inputOperationDelayEnabled.checked = enabled;
   if (typeof syncLatestState === 'function') {
     syncLatestState({ operationDelayEnabled: enabled });
   }
@@ -2625,6 +2911,8 @@ function applyOperationDelayState(state = latestState, options = {}) {
 }
 
 async function persistOperationDelayToggle() {
+  applyOperationDelayState({ operationDelayEnabled: true });
+  return true;
   const nextEnabled = normalizeOperationDelayEnabled(inputOperationDelayEnabled?.checked);
   try {
     const response = await chrome.runtime.sendMessage({
@@ -2660,12 +2948,95 @@ function normalizePlusPaymentMethod(value = '') {
   return normalized === gopayValue ? gopayValue : paypalValue;
 }
 
+function normalizePlusAccountAccessStrategy(value = '') {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
+    return PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION;
+  }
+  if (normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
+    return PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION;
+  }
+  return PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
+}
+
 function getSelectedPlusPaymentMethod(state = latestState) {
   const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
   if (typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod?.value) {
     return normalizePlusPaymentMethod(selectPlusPaymentMethod.value);
   }
   return normalizePlusPaymentMethod(state?.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
+}
+
+function getRequestedPlusAccountAccessStrategy(state = latestState) {
+  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined'
+    ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
+    : 'oauth';
+  const fallbackStrategy = normalizePlusAccountAccessStrategy(
+    (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy?.dataset?.requestedValue)
+    || state?.plusAccountAccessStrategy
+    || currentPlusAccountAccessStrategy
+    || defaultStrategy
+  );
+  if (
+    typeof selectPlusAccountAccessStrategy !== 'undefined'
+    && selectPlusAccountAccessStrategy
+    && !selectPlusAccountAccessStrategy.disabled
+  ) {
+    return normalizePlusAccountAccessStrategy(selectPlusAccountAccessStrategy.value || fallbackStrategy);
+  }
+  return fallbackStrategy;
+}
+
+function normalizePlusStrategyTargetId(value = '') {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'sub2api') {
+    return 'sub2api';
+  }
+  if (normalized === 'codex2api') {
+    return 'codex2api';
+  }
+  return 'cpa';
+}
+
+function getPlusAccountAccessStrategyContinuationLabel(strategy = '', targetId = '') {
+  const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
+  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
+    return '导入当前 ChatGPT 会话到 SUB2API';
+  }
+  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
+    return '导入当前 ChatGPT 会话到 CPA';
+  }
+  return 'OAuth 登录';
+}
+
+function getPlusAccountAccessStrategyDescription(strategy = '', targetId = '') {
+  const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
+  const normalizedTargetId = normalizePlusStrategyTargetId(targetId);
+  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
+    return '复用当前 Plus 已登录会话，直接导入到 SUB2API';
+  }
+  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
+    return '复用当前 Plus 已登录会话，直接导入到 CPA';
+  }
+  if (normalizedTargetId === 'sub2api') {
+    return '通过 OAuth 回调创建 SUB2API 账号';
+  }
+  if (normalizedTargetId === 'codex2api') {
+    return '通过 OAuth 回调创建 Codex2API 账号';
+  }
+  return '通过 OAuth 回调创建 CPA 账号';
+}
+
+function resolvePlusManualContinuationActionLabelFromState(state = latestState) {
+  const activeFlowId = String(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase();
+  const signupMethod = normalizeSignupMethod(state?.resolvedSignupMethod || state?.signupMethod || DEFAULT_SIGNUP_METHOD);
+  const plusModeEnabled = state?.plusModeEnabled === undefined ? true : Boolean(state?.plusModeEnabled);
+  const targetId = normalizePlusStrategyTargetId(state?.panelMode || state?.openaiIntegrationTargetId || 'cpa');
+  const strategy = normalizePlusAccountAccessStrategy(state?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
+  const effectiveStrategy = plusModeEnabled && activeFlowId === DEFAULT_ACTIVE_FLOW_ID && signupMethod === SIGNUP_METHOD_EMAIL
+    ? strategy
+    : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
+  return getPlusAccountAccessStrategyContinuationLabel(effectiveStrategy, targetId);
 }
 
 function normalizeGpcHelperPhoneModeValue(value = '') {
@@ -3512,7 +3883,23 @@ function collectSettingsPayload() {
   const normalizeCloudMailDomainInput = typeof normalizeCloudMailDomainValue === 'function'
     ? normalizeCloudMailDomainValue
     : normalizeCloudflareTempEmailDomainValue;
-  const contributionModeEnabled = Boolean(latestState?.contributionMode);
+  const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined'
+    ? DEFAULT_ACTIVE_FLOW_ID
+    : 'openai';
+  const activeFlowId = typeof getSelectedFlowId === 'function'
+    ? getSelectedFlowId(latestState)
+    : (() => {
+      const normalized = String(
+        latestState?.activeFlowId || latestState?.flowId || defaultFlowId
+      ).trim().toLowerCase();
+      if (normalized === 'codex') {
+        return defaultFlowId;
+      }
+      return normalized || defaultFlowId;
+    })();
+  const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState, activeFlowId)
+    : (activeFlowId === defaultFlowId && Boolean(latestState?.accountContributionEnabled));
   const icloudFetchModeRawValue = typeof selectIcloudFetchMode !== 'undefined'
     ? String(selectIcloudFetchMode?.value || '')
     : '';
@@ -4030,18 +4417,32 @@ function collectSettingsPayload() {
       return normalized === 'sub2api' || normalized === 'codex2api' ? normalized : 'cpa';
     });
   const rawPanelMode = normalizePanelModeSafe(selectPanelMode?.value || latestState?.panelMode || 'cpa');
+  const selectedTargetId = typeof getSelectedTargetId === 'function'
+    ? getSelectedTargetId(activeFlowId)
+    : (activeFlowId === defaultFlowId
+      ? rawPanelMode
+      : String(selectPanelMode?.value || latestState?.kiroTargetId || 'kiro-rs').trim().toLowerCase() || 'kiro-rs');
   const rawPlusModeEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
     ? Boolean(inputPlusModeEnabled.checked)
     : Boolean(latestState?.plusModeEnabled);
+  const requestedPlusAccountAccessStrategy = typeof getRequestedPlusAccountAccessStrategy === 'function'
+    ? getRequestedPlusAccountAccessStrategy(latestState)
+    : normalizePlusAccountAccessStrategy(latestState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
   const rawPhoneVerificationEnabled = Boolean(inputPhoneVerificationEnabled?.checked);
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({
+      activeFlowId,
+      targetId: selectedTargetId,
       panelMode: rawPanelMode,
       signupMethod: selectedSignupMethod,
       state: {
         ...(latestState || {}),
-        panelMode: rawPanelMode,
+        activeFlowId,
+        ...(activeFlowId === defaultFlowId
+          ? { panelMode: rawPanelMode }
+          : { kiroTargetId: selectedTargetId }),
         plusModeEnabled: rawPlusModeEnabled,
+        plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
         phoneVerificationEnabled: rawPhoneVerificationEnabled,
         signupMethod: selectedSignupMethod,
       },
@@ -4053,13 +4454,18 @@ function collectSettingsPayload() {
       }) || null;
       return registry?.resolveSidepanelCapabilities
         ? registry.resolveSidepanelCapabilities({
-          activeFlowId: latestState?.activeFlowId,
+          activeFlowId,
           panelMode: rawPanelMode,
+          targetId: selectedTargetId,
           signupMethod: selectedSignupMethod,
           state: {
             ...(latestState || {}),
-            panelMode: rawPanelMode,
+            activeFlowId,
+            ...(activeFlowId === defaultFlowId
+              ? { panelMode: rawPanelMode }
+              : { kiroTargetId: selectedTargetId }),
             plusModeEnabled: rawPlusModeEnabled,
+            plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
             phoneVerificationEnabled: rawPhoneVerificationEnabled,
             signupMethod: selectedSignupMethod,
           },
@@ -4067,6 +4473,7 @@ function collectSettingsPayload() {
         : null;
     })();
   const effectivePanelMode = capabilityState?.effectivePanelMode || capabilityState?.panelMode || rawPanelMode;
+  const effectiveTargetId = capabilityState?.effectiveTargetId || selectedTargetId;
   const effectivePlusModeEnabled = capabilityState
     ? Boolean(capabilityState.runtimeLocks?.plusModeEnabled)
     : rawPlusModeEnabled;
@@ -4129,10 +4536,38 @@ function collectSettingsPayload() {
       const numeric = Number(String(value ?? '').trim());
       return Number.isSafeInteger(numeric) && numeric >= 1 ? numeric : 1;
     });
+  const flowRegistryApi = typeof getFlowRegistry === 'function' ? getFlowRegistry() : null;
+  const defaultKiroRsUrl = String(flowRegistryApi?.DEFAULT_KIRO_RS_URL || '').trim();
+  const normalizeKiroTargetIdSafe = typeof normalizeTargetIdForFlow === 'function'
+    ? normalizeTargetIdForFlow
+    : ((_flowId, targetId = '', fallback = 'kiro-rs') => {
+      const normalized = String(targetId || '').trim().toLowerCase();
+      return normalized || String(fallback || '').trim().toLowerCase() || 'kiro-rs';
+    });
+  const currentKiroRsUrlValue = typeof inputKiroRsUrl !== 'undefined' && inputKiroRsUrl
+    ? String(inputKiroRsUrl.value ?? '').trim()
+    : null;
+  const currentKiroRsKeyValue = typeof inputKiroRsKey !== 'undefined' && inputKiroRsKey
+    ? String(inputKiroRsKey.value ?? '').trim()
+    : null;
   return {
-    ...(contributionModeEnabled ? {} : {
-      panelMode: effectivePanelMode,
+    activeFlowId,
+    ...(accountContributionEnabled ? {} : {
+      ...(activeFlowId === defaultFlowId ? { panelMode: effectivePanelMode } : {}),
     }),
+    kiroTargetId: normalizeKiroTargetIdSafe(
+      'kiro',
+      activeFlowId === 'kiro'
+        ? effectiveTargetId
+        : (latestState?.kiroTargetId || 'kiro-rs'),
+      'kiro-rs'
+    ),
+    kiroRsUrl: currentKiroRsUrlValue !== null
+      ? (currentKiroRsUrlValue || defaultKiroRsUrl)
+      : (String(latestState?.kiroRsUrl || defaultKiroRsUrl).trim() || defaultKiroRsUrl),
+    kiroRsKey: currentKiroRsKeyValue !== null
+      ? currentKiroRsKeyValue
+      : String(latestState?.kiroRsKey || '').trim(),
     vpsUrl: inputVpsUrl.value.trim(),
     vpsPassword: inputVpsPassword.value,
     localCpaStep9Mode: getSelectedLocalCpaStep9Mode(),
@@ -4171,6 +4606,7 @@ function collectSettingsPayload() {
     codex2apiAdminKey: inputCodex2ApiAdminKey.value.trim(),
     plusModeEnabled: effectivePlusModeEnabled,
     plusPaymentMethod,
+    plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
     paypalEmail: String(currentPayPalAccount?.email || latestState?.paypalEmail || '').trim(),
     paypalPassword: String(currentPayPalAccount?.password || latestState?.paypalPassword || ''),
     currentPayPalAccountId: String(latestState?.currentPayPalAccountId || '').trim(),
@@ -4225,7 +4661,7 @@ function collectSettingsPayload() {
         ? inputGpcHelperLocalSmsUrl.value
         : (latestState?.gopayHelperLocalSmsHelperUrl || '')
     ),
-    ...(contributionModeEnabled ? {} : {
+    ...(accountContributionEnabled ? {} : {
       customPassword: inputPassword.value,
     }),
     mailProvider: selectMailProvider.value,
@@ -4245,7 +4681,7 @@ function collectSettingsPayload() {
     icloudFetchMode: (icloudFetchModeRawValue.trim().toLowerCase() === 'always_new'
       ? 'always_new'
       : 'reuse_existing'),
-    ...(contributionModeEnabled ? {} : {
+    ...(accountContributionEnabled ? {} : {
       accountRunHistoryTextEnabled: true,
       accountRunHistoryHelperBaseUrl: normalizeAccountRunHistoryHelperBaseUrlValue(inputAccountRunHistoryHelperBaseUrl?.value),
     }),
@@ -6507,11 +6943,13 @@ async function refreshFreeReusablePhoneStateFallback(mutationResult = {}, option
   }
 }
 
-async function loadHeroSmsCountries() {
+async function loadHeroSmsCountries(options = {}) {
   const countrySelect = selectHeroSmsCountry || selectHeroSmsCountryFallback;
   if (!countrySelect) {
     return;
   }
+  const silent = Boolean(options?.silent);
+  const preferFallbackOnly = Boolean(options?.preferFallbackOnly);
 
   const provider = getSelectedPhoneSmsProvider();
   const previousSelectionOrder = [...heroSmsCountrySelectionOrder];
@@ -6534,8 +6972,47 @@ async function loadHeroSmsCountries() {
       selectEl.appendChild(option);
     });
   };
+  const applyFiveSimFallbackOptions = () => {
+    const fallbackItems = FIVE_SIM_SUPPORTED_COUNTRY_ITEMS.map((item) => ({
+      id: item.id,
+      label: formatFiveSimCountryDisplayLabel(item.id, item.eng),
+      searchText: item.searchText,
+    }));
+    applyOptions(fallbackItems, selectHeroSmsCountry);
+    applyOptions(fallbackItems, selectHeroSmsCountryFallback);
+    heroSmsCountrySearchTextById.clear();
+    fallbackItems.forEach((entry) => heroSmsCountrySearchTextById.set(String(entry.id), entry.searchText));
+  };
+  const applyHeroSmsFallbackOptions = () => {
+    const fallbackItems = HERO_SMS_FALLBACK_COUNTRY_ITEMS
+      .map((item) => {
+        const id = normalizeHeroSmsCountryId(item.id);
+        const label = buildHeroSmsCountryDisplayLabel(item);
+        return {
+          id,
+          label: String(label || '').trim() || `Country #${id}`,
+          searchText: buildHeroSmsCountrySearchText(item, label, String(id)),
+        };
+      })
+      .filter((item) => item.id > 0);
+    if (!fallbackItems.some((item) => item.id === DEFAULT_HERO_SMS_COUNTRY_ID)) {
+      fallbackItems.unshift({
+        id: DEFAULT_HERO_SMS_COUNTRY_ID,
+        label: DEFAULT_HERO_SMS_COUNTRY_LABEL,
+        searchText: `${DEFAULT_HERO_SMS_COUNTRY_LABEL} ${DEFAULT_HERO_SMS_COUNTRY_ID}`,
+      });
+    }
+    applyOptions(fallbackItems, selectHeroSmsCountry);
+    applyOptions(fallbackItems, selectHeroSmsCountryFallback);
+    heroSmsCountrySearchTextById.clear();
+    fallbackItems.forEach((entry) => {
+      heroSmsCountrySearchTextById.set(String(entry.id), entry.searchText);
+    });
+  };
 
-  if (provider === PHONE_SMS_PROVIDER_FIVE_SIM) {
+  if (provider === PHONE_SMS_PROVIDER_FIVE_SIM && preferFallbackOnly) {
+    applyFiveSimFallbackOptions();
+  } else if (provider === PHONE_SMS_PROVIDER_FIVE_SIM) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -6577,20 +7054,13 @@ async function loadHeroSmsCountries() {
       applyOptions(optionItems, selectHeroSmsCountry);
       applyOptions(optionItems, selectHeroSmsCountryFallback);
     } catch (error) {
-      console.warn('加载 5sim 国家列表失败：', error);
-      const fallbackItems = FIVE_SIM_SUPPORTED_COUNTRY_ITEMS.map((item) => ({
-        id: item.id,
-        label: formatFiveSimCountryDisplayLabel(item.id, item.eng),
-        searchText: item.searchText,
-      }));
-      applyOptions(fallbackItems, selectHeroSmsCountry);
-      applyOptions(fallbackItems, selectHeroSmsCountryFallback);
-      heroSmsCountrySearchTextById.clear();
-      fallbackItems.forEach((entry) => heroSmsCountrySearchTextById.set(String(entry.id), entry.searchText));
-      if (typeof showToast === 'function') {
+      applyFiveSimFallbackOptions();
+      if (!silent && typeof showToast === 'function') {
         showToast(`5sim 国家列表加载失败：${normalizeHeroSmsFetchErrorMessage(error)}（已切换为内置国家列表）`, 'warn', 2800);
       }
     }
+  } else if (preferFallbackOnly) {
+    applyHeroSmsFallbackOptions();
   } else try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -6629,32 +7099,8 @@ async function loadHeroSmsCountries() {
     applyOptions(optionItems, selectHeroSmsCountry);
     applyOptions(optionItems, selectHeroSmsCountryFallback);
   } catch (error) {
-    console.warn('加载 HeroSMS 国家列表失败：', error);
-    const fallbackItems = HERO_SMS_FALLBACK_COUNTRY_ITEMS
-      .map((item) => {
-        const id = normalizeHeroSmsCountryId(item.id);
-        const label = buildHeroSmsCountryDisplayLabel(item);
-        return {
-          id,
-          label: String(label || '').trim() || `Country #${id}`,
-          searchText: buildHeroSmsCountrySearchText(item, label, String(id)),
-        };
-      })
-      .filter((item) => item.id > 0);
-    if (!fallbackItems.some((item) => item.id === DEFAULT_HERO_SMS_COUNTRY_ID)) {
-      fallbackItems.unshift({
-        id: DEFAULT_HERO_SMS_COUNTRY_ID,
-        label: DEFAULT_HERO_SMS_COUNTRY_LABEL,
-        searchText: `${DEFAULT_HERO_SMS_COUNTRY_LABEL} ${DEFAULT_HERO_SMS_COUNTRY_ID}`,
-      });
-    }
-    applyOptions(fallbackItems, selectHeroSmsCountry);
-    applyOptions(fallbackItems, selectHeroSmsCountryFallback);
-    heroSmsCountrySearchTextById.clear();
-    fallbackItems.forEach((entry) => {
-      heroSmsCountrySearchTextById.set(String(entry.id), entry.searchText);
-    });
-    if (typeof showToast === 'function') {
+    applyHeroSmsFallbackOptions();
+    if (!silent && typeof showToast === 'function') {
       showToast(`国家列表加载失败：${normalizeHeroSmsFetchErrorMessage(error)}（已切换为内置国家列表）`, 'warn', 2800);
     }
   }
@@ -6955,10 +7401,12 @@ function removeFiveSimCountryFromOrder(code = '') {
   return nextOrder;
 }
 
-async function loadFiveSimCountries() {
+async function loadFiveSimCountries(options = {}) {
   if (!selectFiveSimCountry) {
     return;
   }
+  const silent = Boolean(options?.silent);
+  const preferFallbackOnly = Boolean(options?.preferFallbackOnly);
   const previousOrder = [...fiveSimCountrySelectionOrder];
   const applyOptions = (items = []) => {
     selectFiveSimCountry.innerHTML = '';
@@ -6982,7 +7430,9 @@ async function loadFiveSimCountries() {
     searchText: item.searchText,
   }));
 
-  try {
+  if (preferFallbackOnly) {
+    applyOptions(fallbackItems);
+  } else try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
     const response = await fetch('https://5sim.net/v1/guest/countries', {
@@ -6998,8 +7448,10 @@ async function loadFiveSimCountries() {
     const items = parseFiveSimCountriesPayload(payload);
     applyOptions(items.length ? items : fallbackItems);
   } catch (error) {
-    console.warn('加载 5sim 国家列表失败：', error);
     applyOptions(fallbackItems);
+    if (!silent && typeof showToast === 'function') {
+      showToast(`5sim 国家列表加载失败：${normalizeHeroSmsFetchErrorMessage(error)}（已切换为内置国家列表）`, 'warn', 2800);
+    }
   }
 
   applyFiveSimCountrySelection(previousOrder.length ? previousOrder : latestState?.fiveSimCountryOrder || [], {
@@ -8049,7 +8501,226 @@ function normalizePanelMode(value = '') {
   return 'cpa';
 }
 
+let flowRegistry = null;
+let settingsSchema = null;
 let flowCapabilityRegistry = null;
+
+function getFlowRegistry() {
+  if (flowRegistry) {
+    return flowRegistry;
+  }
+  const rootScope = typeof window !== 'undefined' ? window : globalThis;
+  flowRegistry = rootScope.MultiPageFlowRegistry || null;
+  return flowRegistry;
+}
+
+function getSettingsSchema() {
+  if (settingsSchema) {
+    return settingsSchema;
+  }
+  const rootScope = typeof window !== 'undefined' ? window : globalThis;
+  const registry = getFlowRegistry();
+  settingsSchema = rootScope.MultiPageSettingsSchema?.createSettingsSchema?.({
+    defaultFlowId: DEFAULT_ACTIVE_FLOW_ID,
+    flowRegistry: registry || undefined,
+  }) || null;
+  return settingsSchema;
+}
+
+function normalizeFlowId(value = '', fallback = DEFAULT_ACTIVE_FLOW_ID) {
+  const registry = getFlowRegistry();
+  if (registry?.normalizeFlowId) {
+    return registry.normalizeFlowId(value, fallback);
+  }
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'codex') {
+    return DEFAULT_ACTIVE_FLOW_ID;
+  }
+  const fallbackValue = String(fallback || '').trim().toLowerCase();
+  return normalized || fallbackValue || DEFAULT_ACTIVE_FLOW_ID;
+}
+
+function getDefaultTargetIdForFlow(flowId = DEFAULT_ACTIVE_FLOW_ID) {
+  const registry = getFlowRegistry();
+  if (registry?.getDefaultTargetId) {
+    return registry.getDefaultTargetId(normalizeFlowId(flowId));
+  }
+  return normalizeFlowId(flowId) === 'kiro' ? 'kiro-rs' : 'cpa';
+}
+
+function normalizeTargetIdForFlow(flowId = DEFAULT_ACTIVE_FLOW_ID, targetId = '', fallback = '') {
+  const normalizedFlowId = normalizeFlowId(flowId);
+  const registry = getFlowRegistry();
+  const fallbackTargetId = fallback || getDefaultTargetIdForFlow(normalizedFlowId);
+  if (registry?.normalizeTargetId) {
+    return registry.normalizeTargetId(normalizedFlowId, targetId, fallbackTargetId);
+  }
+  if (normalizedFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    return normalizePanelMode(targetId || fallbackTargetId);
+  }
+  const normalized = String(targetId || '').trim().toLowerCase();
+  return normalized || String(fallbackTargetId || '').trim().toLowerCase() || 'kiro-rs';
+}
+
+function getSelectedFlowId(state = latestState) {
+  const selectedValue = typeof selectFlow !== 'undefined' && selectFlow
+    ? selectFlow.value
+    : '';
+  return normalizeFlowId(
+    selectedValue || state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID,
+    state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID
+  );
+}
+
+function getSelectedTargetIdForState(state = latestState, flowId = getSelectedFlowId(state)) {
+  const normalizedFlowId = normalizeFlowId(flowId);
+  const schema = getSettingsSchema();
+  if (schema?.getSelectedTargetId) {
+    return schema.getSelectedTargetId(state || {}, normalizedFlowId);
+  }
+  if (normalizedFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    return normalizePanelMode(state?.panelMode || getDefaultTargetIdForFlow(normalizedFlowId));
+  }
+  return normalizeTargetIdForFlow(
+    normalizedFlowId,
+    state?.kiroTargetId || '',
+    getDefaultTargetIdForFlow(normalizedFlowId)
+  );
+}
+
+function getSelectedTargetId(flowId = getSelectedFlowId()) {
+  const normalizedFlowId = normalizeFlowId(flowId);
+  const selectedValue = typeof selectPanelMode !== 'undefined' && selectPanelMode
+    ? selectPanelMode.value
+    : '';
+  if (normalizedFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    return normalizePanelMode(
+      selectedValue || latestState?.panelMode || getDefaultTargetIdForFlow(normalizedFlowId)
+    );
+  }
+  return normalizeTargetIdForFlow(
+    normalizedFlowId,
+    selectedValue || latestState?.kiroTargetId || '',
+    getDefaultTargetIdForFlow(normalizedFlowId)
+  );
+}
+
+function renderFlowSelectorOptions(selectedFlowId = getSelectedFlowId()) {
+  if (!selectFlow) {
+    return [];
+  }
+  const registry = getFlowRegistry();
+  const flowIds = Array.isArray(registry?.getRegisteredFlowIds?.())
+    ? registry.getRegisteredFlowIds()
+    : [DEFAULT_ACTIVE_FLOW_ID];
+  const normalizedSelectedFlowId = normalizeFlowId(selectedFlowId);
+  selectFlow.innerHTML = '';
+  flowIds.forEach((flowId) => {
+    const option = document.createElement('option');
+    option.value = flowId;
+    option.textContent = registry?.getFlowLabel?.(flowId) || flowId;
+    selectFlow.appendChild(option);
+  });
+  selectFlow.value = normalizedSelectedFlowId;
+  return flowIds;
+}
+
+function renderTargetSelectorOptions(flowId = getSelectedFlowId(), selectedTargetId = '') {
+  if (!selectPanelMode) {
+    return [];
+  }
+  const registry = getFlowRegistry();
+  const normalizedFlowId = normalizeFlowId(flowId);
+  const targetOptions = Array.isArray(registry?.getTargetOptions?.(normalizedFlowId))
+    ? registry.getTargetOptions(normalizedFlowId)
+    : [];
+  const normalizedTargetId = normalizeTargetIdForFlow(
+    normalizedFlowId,
+    selectedTargetId,
+    getDefaultTargetIdForFlow(normalizedFlowId)
+  );
+  selectPanelMode.innerHTML = '';
+  targetOptions.forEach((targetOption) => {
+    const option = document.createElement('option');
+    option.value = targetOption.id;
+    option.textContent = targetOption.label || targetOption.id;
+    selectPanelMode.appendChild(option);
+  });
+  if (labelSourceSelector) {
+    labelSourceSelector.textContent = '来源';
+  }
+  selectPanelMode.disabled = targetOptions.length <= 1;
+  if (targetOptions.length > 0) {
+    selectPanelMode.value = normalizedTargetId;
+  }
+  return targetOptions;
+}
+
+function collectVisibleSettingsTargets(visibleGroupIds = []) {
+  const registry = getFlowRegistry();
+  const visibleGroupIdSet = new Set(
+    Array.isArray(visibleGroupIds)
+      ? visibleGroupIds.map((groupId) => String(groupId || '').trim()).filter(Boolean)
+      : []
+  );
+  const groupDefinitions = registry?.getSettingsGroupDefinitions?.() || {};
+  const rowIds = new Set();
+  const sectionIds = new Set();
+  Object.entries(groupDefinitions).forEach(([groupId, definition]) => {
+    if (!visibleGroupIdSet.has(groupId)) {
+      return;
+    }
+    (definition?.rowIds || []).forEach((rowId) => rowIds.add(rowId));
+    (definition?.sectionIds || []).forEach((sectionId) => sectionIds.add(sectionId));
+  });
+  return {
+    rowIds: Array.from(rowIds),
+    sectionIds: Array.from(sectionIds),
+  };
+}
+
+function applyFlowSettingsGroupVisibility(visibleGroupIds = []) {
+  const registry = getFlowRegistry();
+  const groupDefinitions = registry?.getSettingsGroupDefinitions?.() || {};
+  const { rowIds: visibleRowIds, sectionIds: visibleSectionIds } = collectVisibleSettingsTargets(visibleGroupIds);
+  const visibleRowIdSet = new Set(visibleRowIds);
+  const visibleSectionIdSet = new Set(visibleSectionIds);
+  const allRowIds = new Set();
+  const allSectionIds = new Set();
+  Object.values(groupDefinitions).forEach((definition) => {
+    (definition?.rowIds || []).forEach((rowId) => allRowIds.add(rowId));
+    (definition?.sectionIds || []).forEach((sectionId) => allSectionIds.add(sectionId));
+  });
+  allRowIds.forEach((rowId) => {
+    const element = document.getElementById(rowId);
+    if (!element) {
+      return;
+    }
+    element.style.display = visibleRowIdSet.has(rowId) ? '' : 'none';
+  });
+  allSectionIds.forEach((sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (!element) {
+      return;
+    }
+    element.style.display = visibleSectionIdSet.has(sectionId) ? '' : 'none';
+  });
+  return {
+    rowIds: visibleRowIds,
+    sectionIds: visibleSectionIds,
+  };
+}
+
+function syncFlowSelectorsFromState(state = latestState) {
+  const activeFlowId = normalizeFlowId(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID);
+  renderFlowSelectorOptions(activeFlowId);
+  const targetId = getSelectedTargetIdForState(state, activeFlowId);
+  renderTargetSelectorOptions(activeFlowId, targetId);
+  return {
+    activeFlowId,
+    targetId,
+  };
+}
 
 function getFlowCapabilityRegistry() {
   if (flowCapabilityRegistry) {
@@ -8067,13 +8738,38 @@ function resolveCurrentSidepanelCapabilities(options = {}) {
   if (!registry?.resolveSidepanelCapabilities) {
     return null;
   }
+  const activeFlowId = normalizeFlowId(
+    options?.activeFlowId
+      ?? options?.state?.activeFlowId
+      ?? latestState?.activeFlowId
+      ?? latestState?.flowId
+      ?? DEFAULT_ACTIVE_FLOW_ID
+  );
   const state = {
     ...(latestState || {}),
     ...(options?.state || {}),
+    activeFlowId,
   };
+  const targetId = options?.targetId !== undefined
+    ? options.targetId
+    : (activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? (options?.panelMode ?? state?.panelMode)
+      : (options?.kiroTargetId ?? state?.kiroTargetId));
+  if (activeFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    state.panelMode = normalizePanelMode(
+      targetId || state?.panelMode || getDefaultTargetIdForFlow(activeFlowId)
+    );
+  } else {
+    state.kiroTargetId = normalizeTargetIdForFlow(
+      activeFlowId,
+      targetId || state?.kiroTargetId || '',
+      getDefaultTargetIdForFlow(activeFlowId)
+    );
+  }
   return registry.resolveSidepanelCapabilities({
-    activeFlowId: options?.activeFlowId ?? state?.activeFlowId,
-    panelMode: options?.panelMode ?? state?.panelMode,
+    activeFlowId,
+    panelMode: state?.panelMode,
+    targetId: activeFlowId === DEFAULT_ACTIVE_FLOW_ID ? state?.panelMode : state?.kiroTargetId,
     signupMethod: options?.signupMethod ?? state?.signupMethod,
     state,
   });
@@ -8095,16 +8791,21 @@ function resolveStepDefinitionCapabilityState(state = latestState, options = {})
     plusModeEnabled: capabilityState
       ? Boolean(capabilityState.runtimeLocks?.plusModeEnabled)
       : Boolean(nextState?.plusModeEnabled),
+    plusAccountAccessStrategy: capabilityState?.effectivePlusAccountAccessStrategy
+      || normalizePlusAccountAccessStrategy(
+        nextState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
+      ),
     signupMethod: capabilityState?.effectiveSignupMethod
       || normalizeSignupMethod((options?.signupMethod ?? nextState?.signupMethod) || DEFAULT_SIGNUP_METHOD),
   };
 }
 
 function getSelectedPanelMode() {
-  const selectedValue = typeof selectPanelMode !== 'undefined' && selectPanelMode
-    ? selectPanelMode.value
-    : (typeof latestState !== 'undefined' ? latestState?.panelMode : '');
-  const resolvedPanelMode = normalizePanelMode(selectedValue || 'cpa');
+  const resolvedPanelMode = normalizePanelMode(
+    typeof selectPanelMode !== 'undefined' && selectPanelMode
+      ? selectPanelMode.value
+      : (typeof latestState !== 'undefined' ? latestState?.panelMode : '')
+  );
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({ panelMode: resolvedPanelMode })
     : null;
@@ -8132,7 +8833,9 @@ function canSelectPhoneSignupMethod() {
   const plusModeEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
     ? Boolean(inputPlusModeEnabled.checked)
     : Boolean(latestState?.plusModeEnabled);
-  const contributionModeEnabled = Boolean(latestState?.contributionMode);
+  const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState)
+    : Boolean(latestState?.accountContributionEnabled);
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({
       panelMode: typeof getSelectedPanelMode === 'function' ? getSelectedPanelMode() : latestState?.panelMode,
@@ -8140,7 +8843,7 @@ function canSelectPhoneSignupMethod() {
         ...(typeof latestState !== 'undefined' ? latestState : {}),
         phoneVerificationEnabled: phoneEnabled,
         plusModeEnabled,
-        contributionMode: contributionModeEnabled,
+        accountContributionEnabled,
       },
     })
     : (() => {
@@ -8156,7 +8859,7 @@ function canSelectPhoneSignupMethod() {
             ...(typeof latestState !== 'undefined' ? latestState : {}),
             phoneVerificationEnabled: phoneEnabled,
             plusModeEnabled,
-            contributionMode: contributionModeEnabled,
+            accountContributionEnabled,
           },
         })
         : null;
@@ -8164,7 +8867,7 @@ function canSelectPhoneSignupMethod() {
   if (capabilityState && typeof capabilityState.canSelectPhoneSignup === 'boolean') {
     return capabilityState.canSelectPhoneSignup;
   }
-  return phoneEnabled && !plusModeEnabled && !contributionModeEnabled;
+  return phoneEnabled && !plusModeEnabled && !accountContributionEnabled;
 }
 
 function isSignupMethodSwitchLocked() {
@@ -8186,6 +8889,9 @@ function updateSignupMethodUI(options = {}) {
 
   let selectedMethod = normalizeSignupMethod(getSelectedSignupMethod());
   const phoneSelectable = canSelectPhoneSignupMethod();
+  const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState)
+    : Boolean(latestState?.accountContributionEnabled);
   if (!phoneSelectable && selectedMethod === SIGNUP_METHOD_PHONE) {
     selectedMethod = setSignupMethod(SIGNUP_METHOD_EMAIL);
     if (options.notify && typeof showToast === 'function') {
@@ -8205,9 +8911,9 @@ function updateSignupMethodUI(options = {}) {
       if (!Boolean(inputPhoneVerificationEnabled?.checked)) {
         button.title = '开启接码后可选择手机号注册';
       } else if (typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled?.checked) {
-        button.title = 'Plus 模式第一版暂不支持手机号注册';
-      } else if (latestState?.contributionMode) {
-        button.title = '贡献模式第一版暂不支持手机号注册';
+        button.title = 'Plus 模式暂不支持手机号注册';
+      } else if (accountContributionEnabled) {
+        button.title = '账号贡献开启时不能使用手机号注册';
       } else if (locked) {
         button.title = '自动流程运行中不能切换注册方式';
       } else {
@@ -8520,7 +9226,50 @@ function updatePlusModeUI() {
   const paypalValue = typeof PLUS_PAYMENT_METHOD_PAYPAL !== 'undefined' ? PLUS_PAYMENT_METHOD_PAYPAL : 'paypal';
   const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
   const gpcValue = typeof PLUS_PAYMENT_METHOD_GPC_HELPER !== 'undefined' ? PLUS_PAYMENT_METHOD_GPC_HELPER : 'gpc-helper';
+  const oauthStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH !== 'undefined'
+    ? PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH
+    : 'oauth';
+  const sub2apiSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION !== 'undefined'
+    ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
+    : 'sub2api_codex_session';
+  const cpaSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION !== 'undefined'
+    ? PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION
+    : 'cpa_codex_session';
   const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : paypalValue;
+  const resolveStrategyTargetId = typeof normalizePlusStrategyTargetId === 'function'
+    ? normalizePlusStrategyTargetId
+    : ((value = '') => {
+      const normalized = String(value || '').trim().toLowerCase();
+      if (normalized === 'sub2api') {
+        return 'sub2api';
+      }
+      if (normalized === 'codex2api') {
+        return 'codex2api';
+      }
+      return 'cpa';
+    });
+  const describePlusAccountAccessStrategy = typeof getPlusAccountAccessStrategyDescription === 'function'
+    ? getPlusAccountAccessStrategyDescription
+    : ((strategy = '', targetId = '') => {
+      const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
+      const normalizedTargetId = resolveStrategyTargetId(targetId);
+      if (normalizedStrategy === sub2apiSessionStrategyValue) {
+        return '复用当前 Plus 已登录会话，直接导入到 SUB2API';
+      }
+      if (normalizedStrategy === cpaSessionStrategyValue) {
+        return '复用当前 Plus 已登录会话，直接导入到 CPA';
+      }
+      if (normalizedTargetId === 'sub2api') {
+        return '通过 OAuth 回调创建 SUB2API 账号';
+      }
+      if (normalizedTargetId === 'codex2api') {
+        return '通过 OAuth 回调创建 Codex2API 账号';
+      }
+      return '通过 OAuth 回调创建 CPA 账号';
+    });
+  const requestedPlusAccountAccessStrategy = typeof getRequestedPlusAccountAccessStrategy === 'function'
+    ? getRequestedPlusAccountAccessStrategy(latestState)
+    : normalizePlusAccountAccessStrategy(latestState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
   const rawEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
     ? Boolean(inputPlusModeEnabled.checked)
     : false;
@@ -8530,6 +9279,7 @@ function updatePlusModeUI() {
       state: {
         ...(latestState || {}),
         plusModeEnabled: rawEnabled,
+        plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
       },
     })
     : (() => {
@@ -8544,6 +9294,7 @@ function updatePlusModeUI() {
           state: {
             ...(latestState || {}),
             plusModeEnabled: rawEnabled,
+            plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
           },
         })
         : null;
@@ -8552,6 +9303,21 @@ function updatePlusModeUI() {
     ? Boolean(capabilityState.canShowPlusSettings)
     : true;
   const enabled = supportsPlusMode && rawEnabled;
+  const canEditPlusAccountAccessStrategy = Boolean(capabilityState?.canEditPlusAccountAccessStrategy);
+  const availablePlusAccountAccessStrategies = Array.isArray(capabilityState?.availablePlusAccountAccessStrategies)
+    && capabilityState.availablePlusAccountAccessStrategies.length > 0
+    ? capabilityState.availablePlusAccountAccessStrategies
+    : [oauthStrategyValue];
+  const effectivePlusAccountAccessStrategy = capabilityState?.effectivePlusAccountAccessStrategy
+    || requestedPlusAccountAccessStrategy
+    || oauthStrategyValue;
+  const effectiveTargetId = resolveStrategyTargetId(
+    capabilityState?.effectivePanelMode
+    || capabilityState?.effectiveTargetId
+    || capabilityState?.panelMode
+    || (typeof getSelectedPanelMode === 'function' ? getSelectedPanelMode() : latestState?.panelMode)
+    || 'cpa'
+  );
   const method = enabled ? getSelectedPlusPaymentMethod() : defaultMethod;
   const gpcPhoneMode = normalizeGpcHelperPhoneModeValue(
     typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode
@@ -8605,6 +9371,58 @@ function updatePlusModeUI() {
     }
     row.style.display = enabled ? '' : 'none';
   });
+  [
+    typeof rowPlusAccountAccessStrategy !== 'undefined' ? rowPlusAccountAccessStrategy : null,
+  ].forEach((row) => {
+    if (!row) {
+      return;
+    }
+    row.style.display = enabled ? '' : 'none';
+  });
+  if (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy) {
+    const availableStrategySet = new Set(availablePlusAccountAccessStrategies);
+    Array.from(selectPlusAccountAccessStrategy.options || []).forEach((option) => {
+      const optionValue = normalizePlusAccountAccessStrategy(option?.value || '');
+      const optionSupported = availableStrategySet.has(optionValue);
+      option.hidden = enabled ? !optionSupported : false;
+      option.disabled = enabled ? !optionSupported : false;
+    });
+    selectPlusAccountAccessStrategy.dataset.requestedValue = requestedPlusAccountAccessStrategy;
+    selectPlusAccountAccessStrategy.value = effectivePlusAccountAccessStrategy;
+    selectPlusAccountAccessStrategy.disabled = !enabled || !canEditPlusAccountAccessStrategy;
+    selectPlusAccountAccessStrategy.setAttribute('aria-disabled', String(selectPlusAccountAccessStrategy.disabled));
+  }
+  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
+    if (!enabled) {
+      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
+    } else if (!canEditPlusAccountAccessStrategy) {
+      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
+    } else if (effectivePlusAccountAccessStrategy === sub2apiSessionStrategyValue) {
+      plusAccountAccessStrategyCaption.textContent = '复用当前 Plus 已登录会话，直接导入到 SUB2API';
+    } else if (effectivePlusAccountAccessStrategy === oauthStrategyValue) {
+      plusAccountAccessStrategyCaption.textContent = '通过 OAuth 回调创建 SUB2API 账号';
+    } else {
+      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
+    }
+  }
+  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
+    if (!enabled || !canEditPlusAccountAccessStrategy) {
+      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
+    } else {
+      plusAccountAccessStrategyCaption.textContent = describePlusAccountAccessStrategy(
+        effectivePlusAccountAccessStrategy,
+        effectiveTargetId
+      );
+    }
+  }
+  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
+    plusAccountAccessStrategyCaption.textContent = !enabled || !canEditPlusAccountAccessStrategy
+      ? '当前来源仅支持 OAuth'
+      : describePlusAccountAccessStrategy(
+        effectivePlusAccountAccessStrategy,
+        effectiveTargetId
+      );
+  }
   [
     typeof rowPayPalAccount !== 'undefined' ? rowPayPalAccount : null,
   ].forEach((row) => {
@@ -8977,6 +9795,19 @@ async function ensureGpcApiKeyReadyForStart(options = {}) {
 async function openPlusManualConfirmationDialog(options = {}) {
   const method = String(options.method || '').trim().toLowerCase();
   const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
+  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
+  const panelMode = String(latestState?.panelMode || latestState?.openaiIntegrationTargetId || '').trim().toLowerCase();
+  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
+  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
+  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
+  const useSub2ApiSessionImport = plusModeEnabled
+    && activeFlowId === 'openai'
+    && panelMode === 'sub2api'
+    && signupMethod === 'email'
+    && plusAccountAccessStrategy === 'sub2api_codex_session';
+  const continuationActionLabel = useSub2ApiSessionImport
+    ? '导入当前 ChatGPT 会话到 SUB2API'
+    : 'OAuth 登录';
   if (method === 'gopay-otp') {
     if (!sharedFormDialog?.open) {
       return null;
@@ -9020,7 +9851,7 @@ async function openPlusManualConfirmationDialog(options = {}) {
       { id: 'confirm', label: '我已完成订阅', variant: 'btn-primary' },
     ],
     alert: method === gopayValue
-      ? { text: '确认后流程会直接继续到 Plus 模式第 10 步 OAuth 登录。', tone: 'info' }
+      ? { text: `确认后流程会直接继续到 Plus 模式后续的${continuationActionLabel}。`, tone: 'info' }
       : null,
   });
 }
@@ -9035,6 +9866,19 @@ async function syncPlusManualConfirmationDialog() {
 
   const step = Number(latestState?.plusManualConfirmationStep) || 0;
   const method = String(latestState?.plusManualConfirmationMethod || '').trim().toLowerCase();
+  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
+  const panelMode = String(latestState?.panelMode || latestState?.openaiIntegrationTargetId || '').trim().toLowerCase();
+  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
+  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
+  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
+  const useSub2ApiSessionImport = plusModeEnabled
+    && activeFlowId === 'openai'
+    && panelMode === 'sub2api'
+    && signupMethod === 'email'
+    && plusAccountAccessStrategy === 'sub2api_codex_session';
+  const continuationActionLabel = useSub2ApiSessionImport
+    ? '导入当前 ChatGPT 会话到 SUB2API'
+    : 'OAuth 登录';
   const title = latestState?.plusManualConfirmationTitle;
   const message = latestState?.plusManualConfirmationMessage;
   activePlusManualConfirmationRequestId = requestId;
@@ -9076,7 +9920,7 @@ async function syncPlusManualConfirmationDialog() {
       showToast(
         method === 'gopay-otp'
           ? 'GPC OTP 已提交，正在继续验证...'
-          : (method === gopayValue ? 'GoPay 订阅已确认，正在继续 OAuth 登录...' : '已确认，流程继续执行中...'),
+          : (method === gopayValue ? `GoPay 订阅已确认，正在继续${continuationActionLabel}...` : '已确认，流程继续执行中...'),
         'info',
         2200
       );
@@ -9106,6 +9950,60 @@ async function syncPlusManualConfirmationDialog() {
       }, 0);
     }
   }
+}
+async function openPlusManualConfirmationDialog(options = {}) {
+  const method = String(options.method || '').trim().toLowerCase();
+  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
+  const continuationActionLabel = resolvePlusManualContinuationActionLabelFromState(latestState);
+  if (method === 'gopay-otp') {
+    if (!sharedFormDialog?.open) {
+      return null;
+    }
+    const result = await sharedFormDialog.open({
+      title: String(options.title || '').trim() || 'GPC OTP 验证',
+      message: String(options.message || '').trim() || '请在WhatsApp里面获取验证码（耐心等待三十秒左右）',
+      fields: [
+        {
+          key: 'otp',
+          label: 'OTP',
+          type: 'text',
+          placeholder: '请输入 OTP 验证码',
+          inputMode: 'numeric',
+          autocomplete: 'one-time-code',
+          required: true,
+          requiredMessage: '请输入 OTP 验证码。',
+          normalize: (value) => String(value || '').trim().replace(/[^\d]/g, ''),
+          validate: (value) => {
+            const normalized = String(value || '').trim().replace(/[^\d]/g, '');
+            if (!normalized) return '请输入 OTP 验证码。';
+            if (!/^\d{6}$/.test(normalized)) return 'OTP 必须是 6 位数字，请检查。';
+            return '';
+          },
+        },
+      ],
+      confirmLabel: '提交 OTP',
+    });
+    return result
+      ? { action: 'confirm', otp: String(result.otp || '').trim().replace(/[^\d]/g, '') }
+      : { action: 'cancel' };
+  }
+
+  const title = String(options.title || '').trim() || (method === gopayValue ? 'GoPay subscription confirmation' : 'Manual confirmation');
+  const message = String(options.message || '').trim()
+    || (method === gopayValue
+      ? 'Complete the GoPay subscription on the current page, then continue.'
+      : 'Finish the current manual action on the page, then continue.');
+  return openActionModal({
+    title,
+    message,
+    actions: [
+      { id: 'cancel', label: 'Cancel', variant: 'btn-ghost' },
+      { id: 'confirm', label: 'Continue', variant: 'btn-primary' },
+    ],
+    alert: method === gopayValue
+      ? { text: `After confirmation, the Plus flow will continue with ${continuationActionLabel}.`, tone: 'info' }
+      : null,
+  });
 }
 
 async function clearRegistrationEmail(options = {}) {
@@ -9177,15 +10075,31 @@ function updateSaveButtonState() {
   btnSaveSettings.textContent = settingsSaveInFlight ? '保存中' : '保存';
 }
 
+function isEditableElementInSettingsCard(element) {
+  if (!element || !(element instanceof Element)) {
+    return false;
+  }
+  const tagName = String(element.tagName || '').toLowerCase();
+  const isEditableInput = (
+    tagName === 'textarea'
+    || (tagName === 'input' && !['checkbox', 'radio', 'button', 'submit', 'reset', 'range', 'file', 'color'].includes(String(element.type || '').toLowerCase()))
+    || Boolean(element.isContentEditable)
+  );
+  if (!isEditableInput) {
+    return false;
+  }
+  return !settingsCard || settingsCard.contains(element);
+}
+
 function scheduleSettingsAutoSave() {
   clearTimeout(settingsAutoSaveTimer);
   settingsAutoSaveTimer = setTimeout(() => {
-    saveSettings({ silent: true }).catch(() => { });
-  }, 500);
+    saveSettings({ silent: true, source: 'autosave' }).catch(() => { });
+  }, 1200);
 }
 
 async function saveSettings(options = {}) {
-  const { silent = false, force = false } = options;
+  const { silent = false, force = false, source = '' } = options;
   clearTimeout(settingsAutoSaveTimer);
 
   if (!force && !settingsDirty && !settingsSaveInFlight && silent) {
@@ -9196,6 +10110,14 @@ async function saveSettings(options = {}) {
   const saveRevision = settingsSaveRevision;
   settingsSaveInFlight = true;
   updateSaveButtonState();
+
+  const shouldSkipStateApplyForFocusedEditor = (() => {
+    if (!silent || source !== 'autosave') {
+      return false;
+    }
+    const activeEl = typeof document !== 'undefined' ? document.activeElement : null;
+    return isEditableElementInSettingsCard(activeEl);
+  })();
 
   try {
     const response = await chrome.runtime.sendMessage({
@@ -9209,7 +10131,12 @@ async function saveSettings(options = {}) {
     }
 
     if (response?.state && saveRevision === settingsSaveRevision) {
-      applySettingsState(response.state);
+      if (shouldSkipStateApplyForFocusedEditor) {
+        syncLatestState(response.state);
+        markSettingsDirty(false);
+      } else {
+        applySettingsState(response.state);
+      }
     } else {
       syncLatestState(payload);
       if (saveRevision === settingsSaveRevision) {
@@ -9391,6 +10318,7 @@ function renderStepsList() {
 
 function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOrOptions = {}, maybeOptions = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
+  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
   const nextPlusModeEnabled = Boolean(plusModeEnabled);
   const options = typeof plusPaymentMethodOrOptions === 'string'
     ? maybeOptions
@@ -9398,6 +10326,11 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
   const rawPaymentMethod = typeof plusPaymentMethodOrOptions === 'string'
     ? plusPaymentMethodOrOptions
     : (options.plusPaymentMethod || getSelectedPlusPaymentMethod(latestState));
+  const nextPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(
+    options.plusAccountAccessStrategy
+      || currentPlusAccountAccessStrategy
+      || defaultStrategy
+  );
   const nextSignupMethod = normalizeSignupMethod(options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
   const nextPhoneSignupReloginAfterBindEmailEnabled = Boolean(
     options.phoneSignupReloginAfterBindEmailEnabled
@@ -9405,18 +10338,26 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
         ? inputPhoneSignupReloginAfterBindEmail.checked
         : currentPhoneSignupReloginAfterBindEmailEnabled)
   );
+  const nextAccountContributionEnabled = Boolean(
+    options.accountContributionEnabled
+      ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
+  );
   const nextPaymentMethod = normalizePlusPaymentMethod(rawPaymentMethod);
   const nextActiveFlowId = String(
     options.activeFlowId
     || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '')
     || defaultFlowId
   ).trim().toLowerCase() || defaultFlowId;
+  const currentFlowId = typeof currentStepDefinitionFlowId !== 'undefined'
+    ? currentStepDefinitionFlowId
+    : defaultFlowId;
   const rootScope = typeof window !== 'undefined' ? window : globalThis;
   const currentPaymentStep = stepDefinitions.find((step) => step.key === 'paypal-approve');
   const nextPaymentTitle = rootScope.MultiPageStepDefinitions?.getPlusPaymentStepTitle?.({
     activeFlowId: nextActiveFlowId,
     plusModeEnabled: nextPlusModeEnabled,
     plusPaymentMethod: nextPaymentMethod,
+    plusAccountAccessStrategy: nextPlusAccountAccessStrategy,
     signupMethod: nextSignupMethod,
     phoneSignupReloginAfterBindEmailEnabled: nextPhoneSignupReloginAfterBindEmailEnabled,
   });
@@ -9424,8 +10365,11 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
   const shouldRender = Boolean(options.render)
     || nextPlusModeEnabled !== currentPlusModeEnabled
     || nextPaymentMethod !== currentPlusPaymentMethod
+    || nextPlusAccountAccessStrategy !== currentPlusAccountAccessStrategy
     || nextSignupMethod !== currentSignupMethod
     || nextPhoneSignupReloginAfterBindEmailEnabled !== currentPhoneSignupReloginAfterBindEmailEnabled
+    || nextAccountContributionEnabled !== Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
+    || nextActiveFlowId !== currentFlowId
     || paymentTitleChanged;
   if (!shouldRender) {
     return;
@@ -9434,10 +10378,39 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
   rebuildStepDefinitionState(nextPlusModeEnabled, {
     activeFlowId: nextActiveFlowId,
     plusPaymentMethod: nextPaymentMethod,
+    plusAccountAccessStrategy: nextPlusAccountAccessStrategy,
     signupMethod: nextSignupMethod,
     phoneSignupReloginAfterBindEmailEnabled: nextPhoneSignupReloginAfterBindEmailEnabled,
+    accountContributionEnabled: nextAccountContributionEnabled,
   });
   renderStepsList();
+}
+
+function syncStepDefinitionsFromUiState(stateOverrides = {}) {
+  const nextState = {
+    ...(latestState || {}),
+    ...(stateOverrides || {}),
+  };
+  const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
+    ? resolveStepDefinitionCapabilityState(nextState, {
+      activeFlowId: nextState?.activeFlowId,
+      panelMode: nextState?.panelMode,
+      signupMethod: nextState?.signupMethod,
+      state: nextState,
+    })
+    : {
+      plusModeEnabled: Boolean(nextState?.plusModeEnabled),
+      signupMethod: normalizeSignupMethod(nextState?.signupMethod || DEFAULT_SIGNUP_METHOD),
+    };
+  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
+    activeFlowId: nextState?.activeFlowId || nextState?.flowId || DEFAULT_ACTIVE_FLOW_ID,
+    plusPaymentMethod: getSelectedPlusPaymentMethod(nextState),
+    plusAccountAccessStrategy: stepDefinitionState.plusAccountAccessStrategy,
+    signupMethod: stepDefinitionState.signupMethod,
+    phoneSignupReloginAfterBindEmailEnabled: Boolean(nextState?.phoneSignupReloginAfterBindEmailEnabled),
+    accountContributionEnabled: Boolean(nextState?.accountContributionEnabled),
+  });
+  return stepDefinitionState;
 }
 
 // ============================================================
@@ -9455,10 +10428,11 @@ function applySettingsState(state) {
         signupMethod: normalizeSignupMethod(state?.signupMethod || DEFAULT_SIGNUP_METHOD),
       };
     syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
-      activeFlowId: state?.flowId || state?.activeFlowId,
+      activeFlowId: state?.activeFlowId || state?.flowId,
       plusPaymentMethod: state?.plusPaymentMethod,
       signupMethod: stepDefinitionState.signupMethod,
       phoneSignupReloginAfterBindEmailEnabled: Boolean(state?.phoneSignupReloginAfterBindEmailEnabled),
+      accountContributionEnabled: Boolean(state?.accountContributionEnabled),
     });
   }
   const fallbackIpProxyService = '711proxy';
@@ -9508,6 +10482,13 @@ function applySettingsState(state) {
     return Math.max(1, Math.min(1440, numeric));
   };
   syncLatestState(state);
+  const defaultActiveFlowId = typeof DEFAULT_ACTIVE_FLOW_ID === 'string' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
+  const appliedFlowSelection = typeof syncFlowSelectorsFromState === 'function'
+    ? syncFlowSelectorsFromState(state)
+    : {
+      activeFlowId: String(state?.activeFlowId || state?.flowId || defaultActiveFlowId).trim().toLowerCase() || defaultActiveFlowId,
+      targetId: String(state?.panelMode || 'cpa').trim().toLowerCase() || 'cpa',
+    };
   if (typeof applyOperationDelayState === 'function') {
     applyOperationDelayState(state);
   }
@@ -9527,6 +10508,13 @@ function applySettingsState(state) {
   }
   if (typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod) {
     selectPlusPaymentMethod.value = normalizePlusPaymentMethod(state?.plusPaymentMethod);
+  }
+  currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(
+    state?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
+  );
+  if (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy) {
+    selectPlusAccountAccessStrategy.dataset.requestedValue = currentPlusAccountAccessStrategy;
+    selectPlusAccountAccessStrategy.value = currentPlusAccountAccessStrategy;
   }
   if (typeof inputGpcHelperApi !== 'undefined' && inputGpcHelperApi) {
     const defaultGpcHelperApiUrl = typeof DEFAULT_GPC_HELPER_API_URL !== 'undefined'
@@ -9603,7 +10591,6 @@ function applySettingsState(state) {
   inputVpsUrl.value = state?.vpsUrl || '';
   inputVpsPassword.value = state?.vpsPassword || '';
   setLocalCpaStep9Mode(state?.localCpaStep9Mode);
-  selectPanelMode.value = normalizePanelMode(state?.panelMode || 'cpa');
   inputSub2ApiUrl.value = state?.sub2apiUrl || '';
   inputSub2ApiEmail.value = state?.sub2apiEmail || '';
   inputSub2ApiPassword.value = state?.sub2apiPassword || '';
@@ -9612,6 +10599,37 @@ function applySettingsState(state) {
     inputSub2ApiAccountPriority.value = String(normalizeSub2ApiAccountPriorityValue(state?.sub2apiAccountPriority));
   }
   inputSub2ApiDefaultProxy.value = state?.sub2apiDefaultProxyName || '';
+  if (typeof inputKiroRsUrl !== 'undefined' && inputKiroRsUrl) {
+    inputKiroRsUrl.value = String(state?.kiroRsUrl || '').trim();
+  }
+  if (typeof inputKiroRsKey !== 'undefined' && inputKiroRsKey) {
+    inputKiroRsKey.value = String(state?.kiroRsKey || '');
+  }
+  if (typeof displayKiroRsTestStatus !== 'undefined' && displayKiroRsTestStatus) {
+    displayKiroRsTestStatus.textContent = kiroRsConnectionTestStatusText;
+  }
+  if (typeof displayKiroWebStatus !== 'undefined' && displayKiroWebStatus) {
+    const kiroWebStatus = String(
+      state?.kiroRuntime?.webAuth?.status
+      || state?.kiroRuntime?.register?.status
+      || ''
+    ).trim();
+    displayKiroWebStatus.textContent = kiroWebStatus || '未开始';
+  }
+  if (typeof displayKiroLoginUrl !== 'undefined' && displayKiroLoginUrl) {
+    const kiroLoginUrl = String(
+      state?.kiroRuntime?.register?.loginUrl
+      || ''
+    ).trim();
+    displayKiroLoginUrl.textContent = kiroLoginUrl || '未打开';
+  }
+  if (typeof displayKiroUploadStatus !== 'undefined' && displayKiroUploadStatus) {
+    const kiroUploadStatus = String(
+      state?.kiroRuntime?.upload?.status
+      || ''
+    ).trim();
+    displayKiroUploadStatus.textContent = getKiroUploadStatusLabel(kiroUploadStatus);
+  }
   const normalizedIpProxyService = resolveIpProxyService(state?.ipProxyService);
   const normalizedIpProxyServiceProfiles = typeof normalizeIpProxyServiceProfiles === 'function'
     ? normalizeIpProxyServiceProfiles(state?.ipProxyServiceProfiles || {}, state || {})
@@ -9696,6 +10714,12 @@ function applySettingsState(state) {
   });
   if (typeof updateIpProxyUI === 'function') {
     updateIpProxyUI(latestState);
+  }
+  if (typeof selectFlow !== 'undefined' && selectFlow) {
+    selectFlow.value = appliedFlowSelection.activeFlowId;
+  }
+  if (selectPanelMode && appliedFlowSelection.targetId) {
+    selectPanelMode.value = appliedFlowSelection.targetId;
   }
   inputCodex2ApiUrl.value = state?.codex2apiUrl || '';
   inputCodex2ApiAdminKey.value = state?.codex2apiAdminKey || '';
@@ -9848,9 +10872,7 @@ function applySettingsState(state) {
   updatePhoneSmsProviderOrderSummary(restoredPhoneSmsProviderOrder);
   if (previousPhoneSmsProvider !== restoredPhoneSmsProvider) {
     heroSmsCountrySelectionOrder = [];
-    loadHeroSmsCountries().catch((error) => {
-      console.warn('恢复接码平台后重新加载国家列表失败：', error);
-    });
+    loadHeroSmsCountries({ silent: true, preferFallbackOnly: true }).catch(() => { });
   }
   if (inputHeroSmsApiKey) {
     inputHeroSmsApiKey.value = restoredPhoneSmsProvider === PHONE_SMS_PROVIDER_FIVE_SIM
@@ -10390,6 +11412,156 @@ function getContributionUpdatePromptLines(snapshot = currentContributionContentS
   return lines;
 }
 
+function getAutoRunAdConfig(snapshot = currentContributionContentSnapshot) {
+  const items = Array.isArray(snapshot?.items) ? snapshot.items : [];
+  const adItem = items.find((item) =>
+    item
+    && String(item.slug || '').trim().toLowerCase() === 'extension_auto_run_ad'
+  );
+  if (!adItem || !adItem.isVisible) {
+    return null;
+  }
+
+  const text = String(adItem.text || '').replace(/\s+/g, ' ').trim();
+  if (!text) {
+    return null;
+  }
+
+  return {
+    text,
+    title: String(adItem.title || '').trim(),
+  };
+}
+
+function sanitizeAutoRunAdUrl(value = '') {
+  const raw = String(value || '').trim();
+  if (!raw) {
+    return '';
+  }
+
+  try {
+    const parsed = new URL(raw);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return '';
+    }
+    return parsed.href;
+  } catch (_error) {
+    return '';
+  }
+}
+
+function parseAutoRunAdSegments(value = '') {
+  const rawText = String(value || '').trim();
+  if (!rawText) {
+    return [];
+  }
+
+  const segments = [];
+  let cursor = 0;
+
+  while (cursor < rawText.length) {
+    const labelStart = rawText.indexOf('[', cursor);
+    if (labelStart < 0) {
+      segments.push({
+        type: 'text',
+        text: rawText.slice(cursor),
+      });
+      break;
+    }
+
+    const labelEnd = rawText.indexOf(']', labelStart + 1);
+    if (labelEnd < 0 || rawText[labelEnd + 1] !== '(') {
+      segments.push({
+        type: 'text',
+        text: rawText.slice(cursor),
+      });
+      break;
+    }
+
+    if (labelStart > cursor) {
+      segments.push({
+        type: 'text',
+        text: rawText.slice(cursor, labelStart),
+      });
+    }
+
+    let urlEnd = labelEnd + 2;
+    let depth = 1;
+    while (urlEnd < rawText.length && depth > 0) {
+      const ch = rawText[urlEnd];
+      if (ch === '(') {
+        depth += 1;
+      } else if (ch === ')') {
+        depth -= 1;
+      }
+      urlEnd += 1;
+    }
+
+    if (depth > 0) {
+      segments.push({
+        type: 'text',
+        text: rawText.slice(labelStart),
+      });
+      break;
+    }
+
+    const label = rawText.slice(labelStart + 1, labelEnd).trim();
+    const rawSegment = rawText.slice(labelStart, urlEnd);
+    const url = sanitizeAutoRunAdUrl(rawText.slice(labelEnd + 2, urlEnd - 1));
+    if (label && url) {
+      segments.push({
+        type: 'link',
+        text: label,
+        url,
+      });
+    } else {
+      segments.push({
+        type: 'text',
+        text: rawSegment,
+      });
+    }
+    cursor = urlEnd;
+  }
+
+  return segments.filter((segment) => String(segment?.text || '').length > 0);
+}
+
+function getAutoRunAdPlainText(segments = []) {
+  return segments.map((segment) => String(segment?.text || '')).join('').replace(/\s+/g, ' ').trim();
+}
+
+function renderAutoRunAdSegments(container, segments = [], options = {}) {
+  if (!container) {
+    return;
+  }
+
+  const { tabIndex = undefined } = options;
+  container.textContent = '';
+  for (const segment of Array.isArray(segments) ? segments : []) {
+    const text = String(segment?.text || '');
+    if (!text) {
+      continue;
+    }
+
+    if (segment?.type === 'link' && segment?.url) {
+      const link = document.createElement('a');
+      link.className = 'auto-run-ad-link';
+      link.href = segment.url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.dataset.externalUrl = segment.url;
+      if (Number.isInteger(tabIndex)) {
+        link.tabIndex = tabIndex;
+      }
+      link.textContent = text;
+      container.appendChild(link);
+      continue;
+    }
+
+    container.appendChild(document.createTextNode(text));
+  }
+}
+
 function positionContributionUpdateHint() {
   if (!contributionUpdateLayer || !contributionUpdateHint || !btnContributionMode) {
     return;
@@ -10432,10 +11604,12 @@ function shouldShowContributionUpdateHint(snapshot = currentContributionContentS
   if (!getContributionUpdatePromptLines(snapshot).length) {
     return false;
   }
-  if (promptVersion === getDismissedContributionContentPromptVersion()) {
+  if (promptVersion === getDismissedContributionContentPromptVersion(snapshot)) {
     return false;
   }
-  if (latestState?.contributionMode) {
+  if (typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(latestState)
+    : Boolean(latestState?.accountContributionEnabled)) {
     return false;
   }
   return !btnContributionMode.disabled;
@@ -10461,6 +11635,86 @@ function renderContributionUpdateHint(snapshot = currentContributionContentSnaps
   positionContributionUpdateHint();
 }
 
+function resetAutoRunAdScrollState() {
+  if (!autoRunAdBar || !autoRunAdTrack || !autoRunAdTextClone) {
+    return;
+  }
+  autoRunAdBar.classList.remove('is-scrolling');
+  autoRunAdBar.style.removeProperty('--auto-run-ad-gap');
+  autoRunAdBar.style.removeProperty('--auto-run-ad-duration');
+  autoRunAdBar.style.removeProperty('--auto-run-ad-scroll-distance');
+  autoRunAdTextClone.textContent = '';
+}
+
+function syncAutoRunAdScrollState() {
+  if (!autoRunAdBar || !autoRunAdViewport || !autoRunAdTrack || !autoRunAdText || !autoRunAdTextClone || autoRunAdBar.hidden) {
+    resetAutoRunAdScrollState();
+    return;
+  }
+
+  const text = String(autoRunAdText.textContent || '').trim();
+  if (!text) {
+    resetAutoRunAdScrollState();
+    return;
+  }
+
+  const viewportWidth = autoRunAdViewport.clientWidth || 0;
+  const textWidth = Math.ceil(autoRunAdText.getBoundingClientRect().width || 0);
+  if (!viewportWidth || !textWidth || textWidth <= viewportWidth) {
+    resetAutoRunAdScrollState();
+    return;
+  }
+
+  const scrollGap = 32;
+  const scrollDistance = textWidth + scrollGap;
+  const durationSeconds = Math.max(18, scrollDistance / 24);
+  autoRunAdBar.classList.add('is-scrolling');
+  autoRunAdBar.style.setProperty('--auto-run-ad-gap', `${scrollGap}px`);
+  autoRunAdBar.style.setProperty('--auto-run-ad-duration', `${durationSeconds.toFixed(2)}s`);
+  autoRunAdBar.style.setProperty('--auto-run-ad-scroll-distance', `${scrollDistance}px`);
+}
+
+function scheduleAutoRunAdScrollSync() {
+  if (autoRunAdScrollSyncFrame && typeof window.cancelAnimationFrame === 'function') {
+    window.cancelAnimationFrame(autoRunAdScrollSyncFrame);
+    autoRunAdScrollSyncFrame = 0;
+  }
+
+  if (typeof window.requestAnimationFrame === 'function') {
+    autoRunAdScrollSyncFrame = window.requestAnimationFrame(() => {
+      autoRunAdScrollSyncFrame = 0;
+      syncAutoRunAdScrollState();
+    });
+    return;
+  }
+
+  syncAutoRunAdScrollState();
+}
+
+function renderAutoRunAd(snapshot = currentContributionContentSnapshot) {
+  if (!autoRunAdBar || !autoRunAdText || !autoRunAdTextClone) {
+    return;
+  }
+
+  const config = getAutoRunAdConfig(snapshot);
+  const visible = Boolean(config);
+  autoRunAdBar.hidden = !visible;
+  if (!visible) {
+    autoRunAdBar.title = '';
+    autoRunAdText.textContent = '';
+    autoRunAdTextClone.textContent = '';
+    resetAutoRunAdScrollState();
+    return;
+  }
+
+  const segments = parseAutoRunAdSegments(config.text);
+  const plainText = getAutoRunAdPlainText(segments);
+  autoRunAdBar.title = plainText || config.text;
+  renderAutoRunAdSegments(autoRunAdText, segments);
+  renderAutoRunAdSegments(autoRunAdTextClone, segments, { tabIndex: -1 });
+  scheduleAutoRunAdScrollSync();
+}
+
 function dismissContributionUpdateHint() {
   const promptVersion = String(currentContributionContentSnapshot?.promptVersion || '').trim();
   if (promptVersion) {
@@ -10473,21 +11727,27 @@ async function refreshContributionContentHint() {
   if (!contributionContentService?.getContentUpdateSnapshot) {
     currentContributionContentSnapshot = null;
     renderContributionUpdateHint();
+    renderAutoRunAd();
     return null;
   }
   if (contributionContentSnapshotRequestInFlight) {
     return contributionContentSnapshotRequestInFlight;
   }
 
-  contributionContentSnapshotRequestInFlight = contributionContentService.getContentUpdateSnapshot()
+  contributionContentSnapshotRequestInFlight = contributionContentService.getContentUpdateSnapshot({
+    flowId: getContributionContentFlowId(),
+    targetId: getContributionContentTargetId(),
+  })
     .then((snapshot) => {
       currentContributionContentSnapshot = snapshot;
       renderContributionUpdateHint(snapshot);
+      renderAutoRunAd(snapshot);
       return snapshot;
     })
     .catch((error) => {
       currentContributionContentSnapshot = null;
       renderContributionUpdateHint(null);
+      renderAutoRunAd(null);
       throw error;
     })
     .finally(() => {
@@ -10498,7 +11758,10 @@ async function refreshContributionContentHint() {
 }
 
 function syncPasswordField(state) {
-  inputPassword.value = state?.contributionMode ? '' : (state.customPassword || state.password || '');
+  const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
+    ? isContributionModeActiveForFlow(state)
+    : Boolean(state?.accountContributionEnabled);
+  inputPassword.value = accountContributionEnabled ? '' : (state.customPassword || state.password || '');
 }
 
 function isCustomMailProvider(provider = selectMailProvider.value) {
@@ -11646,60 +12909,58 @@ async function handleDeleteSub2ApiGroup(groupName) {
 }
 
 function updatePanelModeUI() {
-  const rawPanelMode = normalizePanelMode(selectPanelMode?.value || latestState?.panelMode || 'cpa');
+  const activeFlowId = typeof getSelectedFlowId === 'function'
+    ? getSelectedFlowId(latestState)
+    : normalizeFlowId(latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID);
+  const targetId = typeof getSelectedTargetId === 'function'
+    ? getSelectedTargetId(activeFlowId)
+    : (activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? normalizePanelMode(selectPanelMode?.value || latestState?.panelMode || 'cpa')
+      : String(selectPanelMode?.value || latestState?.kiroTargetId || 'kiro-rs').trim().toLowerCase() || 'kiro-rs');
+  const rawPanelMode = activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+    ? normalizePanelMode(targetId || latestState?.panelMode || 'cpa')
+    : normalizePanelMode(latestState?.panelMode || 'cpa');
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({
+      activeFlowId,
+      targetId,
       panelMode: rawPanelMode,
       state: {
         ...(latestState || {}),
-        panelMode: rawPanelMode,
+        activeFlowId,
+        ...(activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+          ? { panelMode: rawPanelMode }
+          : { kiroTargetId: targetId }),
       },
     })
     : null;
-  const supportedPanelModes = Array.isArray(capabilityState?.supportedPanelModes)
-    ? capabilityState.supportedPanelModes
-    : [];
-  if (selectPanelMode?.options && supportedPanelModes.length) {
-    Array.from(selectPanelMode.options).forEach((option) => {
-      if (!option) {
-        return;
-      }
-      const optionMode = normalizePanelMode(option.value || '');
-      const enabled = supportedPanelModes.includes(optionMode);
-      option.disabled = !enabled;
-      option.hidden = !enabled;
-    });
-  } else if (selectPanelMode?.options) {
-    Array.from(selectPanelMode.options).forEach((option) => {
-      if (!option) {
-        return;
-      }
-      option.disabled = false;
-      option.hidden = false;
-    });
+  const effectiveTargetId = capabilityState?.effectiveTargetId || targetId;
+  renderFlowSelectorOptions(activeFlowId);
+  renderTargetSelectorOptions(activeFlowId, effectiveTargetId);
+  if (selectFlow) {
+    selectFlow.value = activeFlowId;
   }
-  const panelMode = capabilityState?.effectivePanelMode || capabilityState?.panelMode || getSelectedPanelMode();
   if (selectPanelMode) {
-    selectPanelMode.value = panelMode;
+    selectPanelMode.value = effectiveTargetId;
   }
-  const useSub2Api = panelMode === 'sub2api';
-  const useCodex2Api = panelMode === 'codex2api';
-  const useCpa = !useSub2Api && !useCodex2Api;
-  rowVpsUrl.style.display = useCpa ? '' : 'none';
-  rowVpsPassword.style.display = useCpa ? '' : 'none';
-  rowLocalCpaStep9Mode.style.display = useCpa ? '' : 'none';
-  rowSub2ApiUrl.style.display = useSub2Api ? '' : 'none';
-  rowSub2ApiEmail.style.display = useSub2Api ? '' : 'none';
-  rowSub2ApiPassword.style.display = useSub2Api ? '' : 'none';
-  rowSub2ApiGroup.style.display = useSub2Api ? '' : 'none';
-  rowSub2ApiAccountPriority.style.display = useSub2Api ? '' : 'none';
-  rowSub2ApiDefaultProxy.style.display = useSub2Api ? '' : 'none';
-  rowCodex2ApiUrl.style.display = useCodex2Api ? '' : 'none';
-  rowCodex2ApiAdminKey.style.display = useCodex2Api ? '' : 'none';
+  const visibleGroupIds = Array.isArray(capabilityState?.visibleGroupIds)
+    ? capabilityState.visibleGroupIds
+    : [];
+  if (typeof applyFlowSettingsGroupVisibility === 'function') {
+    applyFlowSettingsGroupVisibility(visibleGroupIds);
+  }
+  if (typeof updatePlusModeUI === 'function') {
+    updatePlusModeUI();
+  }
+  if (typeof updatePhoneVerificationSettingsUI === 'function') {
+    updatePhoneVerificationSettingsUI();
+  }
+  const panelMode = capabilityState?.effectivePanelMode || capabilityState?.panelMode || rawPanelMode;
 
+  const useCodex2Api = panelMode === 'codex2api';
   const step9Btn = document.querySelector('.step-btn[data-step-key="platform-verify"]');
-  if (step9Btn) {
-    step9Btn.textContent = useSub2Api
+  if (step9Btn && activeFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    step9Btn.textContent = panelMode === 'sub2api'
       ? 'SUB2API 回调验证'
       : (useCodex2Api ? 'Codex2API 回调验证' : 'CPA 回调验证');
   }
@@ -12114,6 +13375,132 @@ function bindPasswordVisibilityToggles(root = document) {
   });
 }
 
+function getPrivacyMaskFieldLabel(control) {
+  const row = control?.closest?.('.data-row, .modal-form-row');
+  const label = row?.querySelector?.('.data-label, .modal-form-label')?.textContent;
+  const fallback = control?.getAttribute?.('aria-label')
+    || control?.placeholder
+    || control?.id
+    || '\u5185\u5bb9';
+  return String(label || fallback || '\u5185\u5bb9').replace(/\s+/g, ' ').trim();
+}
+
+function getPrivacyMaskLabels(control) {
+  const label = getPrivacyMaskFieldLabel(control) || '\u5185\u5bb9';
+  return {
+    show: `\u663e\u793a${label}`,
+    hide: `\u9690\u85cf${label}`,
+  };
+}
+
+function ensurePrivacyControlShell(control, className) {
+  const parent = control?.parentElement || null;
+  if (!control || !parent) {
+    return null;
+  }
+  if (parent.classList?.contains(className)) {
+    return parent;
+  }
+  const shell = document.createElement('div');
+  shell.className = className;
+  parent.insertBefore(shell, control);
+  shell.appendChild(control);
+  return shell;
+}
+
+function createPrivacyToggleButton(control, labels) {
+  const button = document.createElement('button');
+  button.className = 'input-icon-btn';
+  button.type = 'button';
+  if (control?.id) {
+    button.id = `btn-toggle-${control.id.replace(/^input-/, '')}`;
+  }
+  button.setAttribute('aria-label', labels.show);
+  button.title = labels.show;
+  return button;
+}
+
+function installPrivacyMaskedInput(input) {
+  if (!input || input.type === 'hidden') {
+    return;
+  }
+  const labels = getPrivacyMaskLabels(input);
+  input.type = 'password';
+  input.classList?.add('data-input-with-icon');
+  const shell = ensurePrivacyControlShell(input, 'input-with-icon');
+  if (!shell) {
+    return;
+  }
+
+  let button = shell.querySelector?.(`[data-password-toggle="${input.id}"]`) || null;
+  if (!button) {
+    button = createPrivacyToggleButton(input, labels);
+    shell.appendChild(button);
+  }
+  button.dataset.passwordToggle = input.id;
+  button.dataset.showLabel = button.dataset.showLabel || labels.show;
+  button.dataset.hideLabel = button.dataset.hideLabel || labels.hide;
+  syncPasswordVisibilityToggle(button);
+}
+
+function syncPrivacyTextareaToggle(button, textarea) {
+  if (!button || !textarea) {
+    return;
+  }
+  const labels = getPrivacyMaskLabels(textarea);
+  const isHidden = textarea.dataset?.privacyMasked !== 'false';
+  textarea.classList?.toggle('is-privacy-masked', isHidden);
+  button.innerHTML = isHidden ? EYE_OPEN_ICON : EYE_CLOSED_ICON;
+  button.setAttribute('aria-label', isHidden ? labels.show : labels.hide);
+  button.title = isHidden ? labels.show : labels.hide;
+}
+
+function installPrivacyMaskedTextarea(textarea) {
+  if (!textarea) {
+    return;
+  }
+  const labels = getPrivacyMaskLabels(textarea);
+  textarea.classList?.add('data-textarea-with-icon', 'is-privacy-masked');
+  if (!textarea.dataset) {
+    return;
+  }
+  textarea.dataset.privacyMasked = textarea.dataset.privacyMasked || 'true';
+  const shell = ensurePrivacyControlShell(textarea, 'textarea-with-icon');
+  if (!shell) {
+    return;
+  }
+
+  let button = shell.querySelector?.(`[data-privacy-textarea-toggle="${textarea.id}"]`) || null;
+  if (!button) {
+    button = createPrivacyToggleButton(textarea, labels);
+    shell.appendChild(button);
+  }
+  button.dataset.privacyTextareaToggle = textarea.id;
+  syncPrivacyTextareaToggle(button, textarea);
+  if (button.dataset?.privacyTextareaToggleBound === 'true') {
+    return;
+  }
+  button.dataset.privacyTextareaToggleBound = 'true';
+  button.addEventListener('click', () => {
+    textarea.dataset.privacyMasked = textarea.dataset.privacyMasked === 'false' ? 'true' : 'false';
+    syncPrivacyTextareaToggle(button, textarea);
+  });
+}
+
+function installPrivacyMaskControls(root = document) {
+  PRIVACY_MASKED_INPUT_IDS.forEach((inputId) => {
+    const input = root.getElementById?.(inputId) || document.getElementById(inputId);
+    installPrivacyMaskedInput(input);
+  });
+  PRIVACY_MASKED_TEXTAREA_IDS.forEach((textareaId) => {
+    const textarea = root.getElementById?.(textareaId) || document.getElementById(textareaId);
+    installPrivacyMaskedTextarea(textarea);
+  });
+}
+
+installPrivacyMaskControls();
+bindPasswordVisibilityToggles();
+
 async function copyTextToClipboard(text) {
   const value = String(text || '').trim();
   if (!value) {
@@ -12472,7 +13859,7 @@ const bindAccountRecordEvents = accountRecordsManager?.bindEvents
 const closeAccountRecordsPanel = accountRecordsManager?.closePanel
   || (() => { });
 bindAccountRecordEvents();
-const contributionModeManager = window.SidepanelContributionMode?.createContributionModeManager({
+const accountContributionManager = window.SidepanelContributionMode?.createContributionModeManager({
   state: {
     getLatestState: () => latestState,
   },
@@ -12481,15 +13868,17 @@ const contributionModeManager = window.SidepanelContributionMode?.createContribu
     btnContributionMode,
     inputContributionNickname,
     inputContributionQq,
+    contributionPrimaryStatusLabel,
+    contributionSecondaryStatusLabel,
     contributionCallbackStatus,
     btnExitContributionMode,
     btnOpenAccountRecords,
     btnOpenContributionUpload,
     btnStartContribution,
-    contributionModeBadge,
-    contributionModePanel,
-    contributionModeSummary,
-    contributionModeText,
+    accountContributionBadge,
+    accountContributionPanel,
+    accountContributionSummary,
+    accountContributionText,
     contributionOauthStatus,
     rowAccountRunHistoryHelperBaseUrl,
     rowPhoneVerificationEnabled,
@@ -12514,9 +13903,16 @@ const contributionModeManager = window.SidepanelContributionMode?.createContribu
       nickname: String(inputContributionNickname?.value || '').trim(),
       qq: String(inputContributionQq?.value || '').trim(),
     }),
+    getSelectedFlowId: () => (typeof getSelectedFlowId === 'function'
+      ? getSelectedFlowId(latestState)
+      : String(latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID),
+    getSelectedTargetId: (flowId, state = latestState) => (typeof getSelectedTargetIdForState === 'function'
+      ? getSelectedTargetIdForState(state, flowId)
+      : (String(state?.panelMode || state?.kiroTargetId || 'cpa').trim().toLowerCase() || 'cpa')),
     isModeSwitchBlocked: isContributionModeSwitchBlocked,
     openConfirmModal,
     openExternalUrl,
+    persistCurrentSettingsForAction,
     showToast,
     startContributionAutoRun: () => startAutoRunFromCurrentSettings(),
     updateAccountRunHistorySettingsUI,
@@ -12533,16 +13929,16 @@ const contributionModeManager = window.SidepanelContributionMode?.createContribu
     contributionUploadUrl: `${String(contributionContentService?.portalUrl || 'https://flowpilot.qlhazycoder.top').replace(/\/+$/, '')}/upload`,
   },
 });
-const baseRenderContributionMode = contributionModeManager?.render
+const baseRenderAccountContribution = accountContributionManager?.render
   || (() => { });
 const renderContributionMode = () => {
-  baseRenderContributionMode();
+  baseRenderAccountContribution();
   renderContributionUpdateHint();
   updateSignupMethodUI({ notify: true });
 };
-const bindContributionModeEvents = contributionModeManager?.bindEvents
+const bindAccountContributionEvents = accountContributionManager?.bindEvents
   || (() => { });
-bindContributionModeEvents();
+bindAccountContributionEvents();
 renderStepsList();
 
 async function exportSettingsFile() {
@@ -12762,15 +14158,16 @@ stepsList?.addEventListener('click', async (event) => {
     if (step === gpcCreateStep && !(await ensureGpcApiKeyReadyForStart())) {
       return;
     }
-    if (step === 3) {
-      if (inputPassword.value !== (latestState?.customPassword || '')) {
-        await chrome.runtime.sendMessage({
-          type: 'SAVE_SETTING',
-          source: 'sidepanel',
-          payload: { customPassword: inputPassword.value },
-        });
-        syncLatestState({ customPassword: inputPassword.value });
-      }
+    const shouldPersistSharedPassword = nodeId === 'fill-password' || nodeId === 'kiro-submit-password';
+    if (shouldPersistSharedPassword && inputPassword.value !== (latestState?.customPassword || '')) {
+      await chrome.runtime.sendMessage({
+        type: 'SAVE_SETTING',
+        source: 'sidepanel',
+        payload: { customPassword: inputPassword.value },
+      });
+      syncLatestState({ customPassword: inputPassword.value });
+    }
+    if (nodeId === 'fill-password') {
       if (shouldExecuteStep3WithSignupPhoneIdentity(latestState)) {
         const response = await sendSidepanelMessage({ type: 'EXECUTE_NODE', source: 'sidepanel', payload: { nodeId } });
         if (response?.error) {
@@ -13004,6 +14401,12 @@ autoStartMessage?.addEventListener('click', (event) => {
   event.preventDefault();
   openExternalUrl(link.dataset.externalUrl || link.href);
 });
+autoRunAdBar?.addEventListener('click', (event) => {
+  const link = event.target?.closest?.('a[data-external-url]');
+  if (!link) return;
+  event.preventDefault();
+  openExternalUrl(link.dataset.externalUrl || link.href);
+});
 btnAutoStartClose?.addEventListener('click', () => resolveModalChoice(null));
 
 async function startAutoRunFromCurrentSettings() {
@@ -13015,11 +14418,10 @@ async function startAutoRunFromCurrentSettings() {
     : getRunCountValue();
   registerPendingAutoRunStartRunCount(requestedTotalRuns);
 
-  try {
-    await refreshContributionContentHint();
-  } catch (error) {
+  // 站点内容刷新只影响提示/广告展示，不应阻塞自动流程启动。
+  refreshContributionContentHint().catch((error) => {
     console.warn('Failed to refresh contribution content hint before auto run:', error);
-  }
+  });
 
   if (typeof persistCurrentSettingsForAction === 'function') {
     await persistCurrentSettingsForAction();
@@ -13042,7 +14444,7 @@ async function startAutoRunFromCurrentSettings() {
       plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
         ? Boolean(inputPlusModeEnabled.checked)
         : Boolean(latestState?.plusModeEnabled),
-      contributionMode: Boolean(latestState?.contributionMode),
+      accountContributionEnabled: Boolean(latestState?.accountContributionEnabled),
     };
     return registry.validateAutoRunStart({
       activeFlowId: validationState.activeFlowId,
@@ -13109,6 +14511,16 @@ async function startAutoRunFromCurrentSettings() {
   inputRunCount.disabled = true;
   const delayEnabled = inputAutoDelayEnabled.checked;
   const delayMinutes = normalizeAutoDelayMinutes(inputAutoDelayMinutes.value);
+  const activeFlowId = typeof getSelectedFlowId === 'function'
+    ? getSelectedFlowId(latestState)
+    : (String(latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID);
+  const targetId = typeof getSelectedTargetId === 'function'
+    ? getSelectedTargetId(activeFlowId)
+    : (
+      activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+        ? normalizePanelMode(latestState?.panelMode || 'cpa')
+        : (String(latestState?.kiroTargetId || 'kiro-rs').trim().toLowerCase() || 'kiro-rs')
+    );
   inputAutoDelayMinutes.value = String(delayMinutes);
   btnAutoRun.innerHTML = delayEnabled
     ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 计划中...'
@@ -13119,8 +14531,11 @@ async function startAutoRunFromCurrentSettings() {
     payload: {
       totalRuns,
       delayMinutes,
+      activeFlowId,
+      targetId,
       autoRunSkipFailures,
-      contributionMode: Boolean(latestState?.contributionMode),
+      accountContributionEnabled: Boolean(latestState?.accountContributionEnabled),
+      contributionAdapterId: latestState?.contributionAdapterId || '',
       contributionNickname,
       contributionQq,
       mode,
@@ -13227,6 +14642,7 @@ btnReset.addEventListener('click', async () => {
   displayOauthUrl.classList.remove('has-value');
   displayLocalhostUrl.textContent = '等待中...';
   displayLocalhostUrl.classList.remove('has-value');
+  setKiroRsConnectionTestStatus('未测试');
   inputEmail.value = '';
   if (typeof inputSignupPhone !== 'undefined' && inputSignupPhone) {
     inputSignupPhone.value = '';
@@ -13392,10 +14808,6 @@ inputPlusModeEnabled?.addEventListener('change', () => {
   saveSettings({ silent: true }).catch(() => { });
 });
 
-inputOperationDelayEnabled?.addEventListener('change', () => {
-  persistOperationDelayToggle().catch(() => { });
-});
-
 selectPlusPaymentMethod?.addEventListener('change', () => {
   selectPlusPaymentMethod.value = normalizePlusPaymentMethod(selectPlusPaymentMethod.value);
   updatePlusModeUI();
@@ -13425,6 +14837,10 @@ btnGpcCardKeyPurchase?.addEventListener('click', () => {
 
 btnGpcHelperConvertApiKey?.addEventListener('click', () => {
   openExternalUrl(GPC_HELPER_PORTAL_URL);
+});
+
+btnOpenKiroRsGithub?.addEventListener('click', () => {
+  openExternalUrl('https://github.com/QLHazyCoder/kiro.rs');
 });
 
 btnGpcHelperBalance?.addEventListener('click', async () => {
@@ -13471,6 +14887,44 @@ btnGpcHelperBalance?.addEventListener('click', async () => {
     updatePlusModeUI();
   } catch (error) {
     showToast(error?.message || '查询 GPC 余额失败。', 'error');
+  }
+});
+
+btnTestKiroRs?.addEventListener('click', async () => {
+  const defaultLabel = btnTestKiroRs.textContent || '测试';
+  btnTestKiroRs.disabled = true;
+  btnTestKiroRs.textContent = '测试中';
+  setKiroRsConnectionTestStatus('测试中...');
+  try {
+    await persistCurrentSettingsForAction();
+    const activeFlowId = typeof getSelectedFlowId === 'function'
+      ? getSelectedFlowId(latestState)
+      : 'kiro';
+    const targetId = typeof getSelectedTargetId === 'function'
+      ? getSelectedTargetId(activeFlowId)
+      : 'kiro-rs';
+    const response = await sendSidepanelMessage({
+      type: 'CHECK_KIRO_RS_CONNECTION',
+      payload: {
+        activeFlowId,
+        targetId,
+        baseUrl: String(inputKiroRsUrl?.value || '').trim(),
+        apiKey: String(inputKiroRsKey?.value || ''),
+      },
+    });
+    if (response?.error) {
+      throw new Error(response.error);
+    }
+    const message = String(response?.message || '').trim() || 'kiro.rs 测试完成。';
+    setKiroRsConnectionTestStatus(message);
+    showToast(message, response?.ok ? 'success' : 'error', response?.ok ? 2200 : 4200);
+  } catch (error) {
+    const message = error?.message || 'kiro.rs 测试失败。';
+    setKiroRsConnectionTestStatus(message);
+    showToast(message, 'error', 4200);
+  } finally {
+    btnTestKiroRs.disabled = false;
+    btnTestKiroRs.textContent = defaultLabel;
   }
 });
 
@@ -13650,24 +15104,82 @@ checkboxAutoDeleteIcloud?.addEventListener('change', () => {
 });
 
 selectPanelMode.addEventListener('change', async () => {
-  const previousPanelMode = normalizePanelMode(latestState?.panelMode || 'cpa');
-  const rawNextPanelMode = normalizePanelMode(selectPanelMode.value);
-  selectPanelMode.value = rawNextPanelMode;
-  const nextPanelMode = getSelectedPanelMode();
-  selectPanelMode.value = nextPanelMode;
-  const confirmed = await confirmCpaPhoneSignupIfNeeded({
-    signupMethod: getSelectedSignupMethod(),
-    panelMode: nextPanelMode,
-  });
-  if (!confirmed) {
-    selectPanelMode.value = previousPanelMode;
-    updatePanelModeUI();
-    return;
+  const activeFlowId = typeof getSelectedFlowId === 'function'
+    ? getSelectedFlowId(latestState)
+    : normalizeFlowId(latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID);
+  const defaultTargetId = typeof getDefaultTargetIdForFlow === 'function'
+    ? getDefaultTargetIdForFlow(activeFlowId)
+    : (activeFlowId === DEFAULT_ACTIVE_FLOW_ID ? 'cpa' : 'kiro-rs');
+  const previousTargetId = typeof getSelectedTargetIdForState === 'function'
+    ? getSelectedTargetIdForState(latestState, activeFlowId)
+    : (activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? normalizePanelMode(latestState?.panelMode || defaultTargetId)
+      : String(latestState?.kiroTargetId || defaultTargetId).trim().toLowerCase() || defaultTargetId);
+  let nextTargetId = typeof normalizeTargetIdForFlow === 'function'
+    ? normalizeTargetIdForFlow(activeFlowId, selectPanelMode.value, defaultTargetId)
+    : (activeFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? normalizePanelMode(selectPanelMode.value)
+      : String(selectPanelMode.value || defaultTargetId).trim().toLowerCase() || defaultTargetId);
+  if (activeFlowId === DEFAULT_ACTIVE_FLOW_ID) {
+    const nextPanelMode = normalizePanelMode(nextTargetId);
+    selectPanelMode.value = nextPanelMode;
+    const confirmed = await confirmCpaPhoneSignupIfNeeded({
+      signupMethod: getSelectedSignupMethod(),
+      panelMode: nextPanelMode,
+    });
+    if (!confirmed) {
+      selectPanelMode.value = previousTargetId;
+      updatePanelModeUI();
+      return;
+    }
+    nextTargetId = nextPanelMode;
+    syncLatestState({
+      activeFlowId,
+      flowId: activeFlowId,
+      panelMode: nextPanelMode,
+    });
+  } else {
+    syncLatestState({
+      activeFlowId,
+      flowId: activeFlowId,
+      kiroTargetId: nextTargetId,
+    });
   }
-  syncLatestState({ panelMode: nextPanelMode });
   updatePanelModeUI();
+  if (typeof syncStepDefinitionsFromUiState === 'function') {
+    syncStepDefinitionsFromUiState({
+      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
+        ? Boolean(inputPlusModeEnabled.checked)
+        : Boolean(latestState?.plusModeEnabled),
+      signupMethod: getSelectedSignupMethod(),
+      phoneSignupReloginAfterBindEmailEnabled: typeof inputPhoneSignupReloginAfterBindEmail !== 'undefined' && inputPhoneSignupReloginAfterBindEmail
+        ? Boolean(inputPhoneSignupReloginAfterBindEmail.checked)
+        : Boolean(latestState?.phoneSignupReloginAfterBindEmailEnabled),
+    });
+  }
+  applyStepExecutionRangeState(latestState);
+  renderStepStatuses(latestState);
+  updateButtonStates();
   markSettingsDirty(true);
   saveSettings({ silent: true }).catch(() => { });
+});
+
+selectPlusAccountAccessStrategy?.addEventListener('change', () => {
+  selectPlusAccountAccessStrategy.value = normalizePlusAccountAccessStrategy(selectPlusAccountAccessStrategy.value);
+  updatePlusModeUI();
+  markSettingsDirty(true);
+  saveSettings({ silent: true }).catch(() => { });
+});
+
+[inputKiroRsUrl, inputKiroRsKey].forEach((input) => {
+  input?.addEventListener('input', () => {
+    markSettingsDirty(true);
+    setKiroRsConnectionTestStatus('未测试');
+    scheduleSettingsAutoSave();
+  });
+  input?.addEventListener('blur', () => {
+    saveSettings({ silent: true }).catch(() => { });
+  });
 });
 
 function syncCurrentIpProxyServiceProfileToLatestState() {
@@ -14434,20 +15946,63 @@ inputStepExecutionRangeEnabled?.addEventListener('change', () => {
 });
 
 selectFlow?.addEventListener('change', () => {
+  const nextActiveFlowId = typeof normalizeFlowId === 'function'
+    ? normalizeFlowId(selectFlow.value, latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID)
+    : (String(selectFlow.value || latestState?.activeFlowId || latestState?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID);
+  const nextStateBase = {
+    ...(latestState || {}),
+    activeFlowId: nextActiveFlowId,
+    flowId: nextActiveFlowId,
+  };
+  const defaultTargetId = typeof getDefaultTargetIdForFlow === 'function'
+    ? getDefaultTargetIdForFlow(nextActiveFlowId)
+    : (nextActiveFlowId === DEFAULT_ACTIVE_FLOW_ID ? 'cpa' : 'kiro-rs');
+  const nextTargetId = typeof getSelectedTargetIdForState === 'function'
+    ? getSelectedTargetIdForState(nextStateBase, nextActiveFlowId)
+    : (nextActiveFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? normalizePanelMode(nextStateBase?.panelMode || defaultTargetId)
+      : String(nextStateBase?.kiroTargetId || defaultTargetId).trim().toLowerCase() || defaultTargetId);
+  syncLatestState({
+    activeFlowId: nextActiveFlowId,
+    flowId: nextActiveFlowId,
+    ...(nextActiveFlowId === DEFAULT_ACTIVE_FLOW_ID
+      ? { panelMode: normalizePanelMode(nextTargetId || defaultTargetId) }
+      : {
+        kiroTargetId: typeof normalizeTargetIdForFlow === 'function'
+          ? normalizeTargetIdForFlow(nextActiveFlowId, nextTargetId, defaultTargetId)
+          : (String(nextTargetId || defaultTargetId).trim().toLowerCase() || defaultTargetId),
+      }),
+  });
+  updatePanelModeUI();
+  if (typeof syncStepDefinitionsFromUiState === 'function') {
+    syncStepDefinitionsFromUiState({
+      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
+        ? Boolean(inputPlusModeEnabled.checked)
+        : Boolean(latestState?.plusModeEnabled),
+      signupMethod: getSelectedSignupMethod(),
+      phoneSignupReloginAfterBindEmailEnabled: typeof inputPhoneSignupReloginAfterBindEmail !== 'undefined' && inputPhoneSignupReloginAfterBindEmail
+        ? Boolean(inputPhoneSignupReloginAfterBindEmail.checked)
+        : Boolean(latestState?.phoneSignupReloginAfterBindEmailEnabled),
+    });
+  }
   applyStepExecutionRangeState(latestState);
   renderStepStatuses(latestState);
   updateButtonStates();
+  markSettingsDirty(true);
+  saveSettings({ silent: true }).catch(() => { });
 });
 
 [inputStepExecutionRangeFrom, inputStepExecutionRangeTo].forEach((input) => {
-  input?.addEventListener('input', () => {
+  const handleRangeChange = () => {
     const stepExecutionRangeByFlow = buildStepExecutionRangeByFlowPayload(latestState?.stepExecutionRangeByFlow);
     syncLatestState({ stepExecutionRangeByFlow });
     markSettingsDirty(true);
     renderStepStatuses(latestState);
     updateButtonStates();
     scheduleSettingsAutoSave();
-  });
+  };
+  input?.addEventListener('input', handleRangeChange);
+  input?.addEventListener('change', handleRangeChange);
   input?.addEventListener('blur', () => {
     clampStepExecutionRangeInputs();
     saveSettings({ silent: true }).catch(() => { });
@@ -15310,6 +16865,20 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
     case 'DATA_UPDATED': {
       syncLatestState(message.payload);
+      const activeSettingsEditor = typeof document !== 'undefined' ? document.activeElement : null;
+      const shouldDeferDataUpdatedUiApply = settingsSaveInFlight
+        && isEditableElementInSettingsCard(activeSettingsEditor);
+      if (shouldDeferDataUpdatedUiApply) {
+        // Avoid overwriting the focused editor while the current save request
+        // is still in flight; otherwise typing can be interrupted by DATA_UPDATED.
+        if (message.payload.operationDelayEnabled !== undefined && typeof applyOperationDelayState === 'function') {
+          applyOperationDelayState(message.payload);
+        }
+        updateAccountRunHistorySettingsUI();
+        renderContributionMode();
+        void syncPlusManualConfirmationDialog();
+        break;
+      }
       if (message.payload.operationDelayEnabled !== undefined && typeof applyOperationDelayState === 'function') {
         applyOperationDelayState(message.payload);
       }
@@ -15329,15 +16898,24 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (
         message.payload.password !== undefined
         || message.payload.customPassword !== undefined
-        || message.payload.contributionMode !== undefined
+        || message.payload.accountContributionEnabled !== undefined
       ) {
         syncPasswordField(latestState || {});
       }
       if (message.payload.localCpaStep9Mode !== undefined) {
         setLocalCpaStep9Mode(message.payload.localCpaStep9Mode);
       }
-      if (message.payload.panelMode !== undefined) {
-        selectPanelMode.value = normalizePanelMode(message.payload.panelMode || 'cpa');
+      if (
+        message.payload.panelMode !== undefined
+        || message.payload.activeFlowId !== undefined
+        || message.payload.flowId !== undefined
+        || message.payload.kiroTargetId !== undefined
+      ) {
+        if (typeof syncFlowSelectorsFromState === 'function') {
+          syncFlowSelectorsFromState(latestState);
+        } else if (message.payload.panelMode !== undefined) {
+          selectPanelMode.value = normalizePanelMode(message.payload.panelMode || 'cpa');
+        }
         updatePanelModeUI();
       }
       if (
@@ -15551,6 +17129,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (message.payload.plusPaymentMethod !== undefined && selectPlusPaymentMethod) {
         selectPlusPaymentMethod.value = normalizePlusPaymentMethod(message.payload.plusPaymentMethod);
       }
+      if (message.payload.plusAccountAccessStrategy !== undefined && selectPlusAccountAccessStrategy) {
+        currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(message.payload.plusAccountAccessStrategy);
+        selectPlusAccountAccessStrategy.dataset.requestedValue = currentPlusAccountAccessStrategy;
+        if (!selectPlusAccountAccessStrategy.disabled) {
+          selectPlusAccountAccessStrategy.value = currentPlusAccountAccessStrategy;
+        }
+      }
       if (message.payload.gopayHelperPhoneMode !== undefined && selectGpcHelperPhoneMode) {
         selectGpcHelperPhoneMode.value = normalizeGpcHelperPhoneModeValue(message.payload.gopayHelperPhoneMode);
       }
@@ -15575,6 +17160,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (
         message.payload.plusModeEnabled !== undefined
         || message.payload.plusPaymentMethod !== undefined
+        || message.payload.plusAccountAccessStrategy !== undefined
         || message.payload.gopayHelperPhoneMode !== undefined
         || message.payload.gopayHelperAutoModeEnabled !== undefined
         || message.payload.gopayHelperOtpChannel !== undefined
@@ -16096,6 +17682,7 @@ document.addEventListener('keydown', (event) => {
 
 window.addEventListener('resize', () => {
   positionContributionUpdateHint();
+  scheduleAutoRunAdScrollSync();
 });
 
 document.addEventListener('scroll', () => {
@@ -16107,7 +17694,6 @@ document.addEventListener('scroll', () => {
 // ============================================================
 
 initializeManualStepActions();
-bindPasswordVisibilityToggles();
 initTheme();
 initHotmailListExpandedState();
 initMail2925ListExpandedState();
@@ -16127,21 +17713,21 @@ initializeReleaseInfo().catch((err) => {
   console.error('Failed to initialize release info:', err);
 });
 Promise.allSettled([
-  loadHeroSmsCountries(),
-  loadFiveSimCountries(),
-  loadNexSmsCountries({ silent: true }),
+  loadHeroSmsCountries({ silent: true, preferFallbackOnly: true }),
+  loadFiveSimCountries({ silent: true, preferFallbackOnly: true }),
+  loadNexSmsCountries(),
 ]).then((results) => {
   const heroResult = results[0];
   const fiveSimResult = results[1];
   const nexSmsResult = results[2];
   if (heroResult?.status === 'rejected') {
-    console.error('加载 HeroSMS 国家列表失败：', heroResult.reason);
+    console.debug('HeroSMS country list startup fallback skipped:', heroResult.reason);
   }
   if (fiveSimResult?.status === 'rejected') {
-    console.error('加载 5sim 国家列表失败：', fiveSimResult.reason);
+    console.debug('5sim country list startup fallback skipped:', fiveSimResult.reason);
   }
   if (nexSmsResult?.status === 'rejected') {
-    console.error('加载 NexSMS 国家列表失败：', nexSmsResult.reason);
+    console.debug('NexSMS country list startup fallback skipped:', nexSmsResult.reason);
   }
   return restoreState().then(() => {
     syncPasswordToggleLabel();
