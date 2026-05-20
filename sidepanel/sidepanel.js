@@ -4397,12 +4397,16 @@ function normalizePhoneSmsProvider(value = '') {
   const nexSmsProvider = typeof PHONE_SMS_PROVIDER_NEXSMS !== 'undefined'
     ? PHONE_SMS_PROVIDER_NEXSMS
     : 'nexsms';
+  const customSmsProvider = 'custom-sms';
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === PHONE_SMS_PROVIDER_FIVE_SIM) {
     return PHONE_SMS_PROVIDER_FIVE_SIM;
   }
   if (normalized === nexSmsProvider) {
     return nexSmsProvider;
+  }
+  if (normalized === customSmsProvider) {
+    return customSmsProvider;
   }
   return PHONE_SMS_PROVIDER_HERO_SMS;
 }
@@ -8296,20 +8300,22 @@ function updatePhoneVerificationSettingsUI() {
   const nexSmsProviderValue = typeof PHONE_SMS_PROVIDER_NEXSMS !== 'undefined' ? PHONE_SMS_PROVIDER_NEXSMS : 'nexsms';
   const customSmsProviderValue = 'custom-sms';
   const providerOrderForDisplay = resolveNormalizedProviderOrderForRuntime(latestState || {});
-  const provider = providerOrderForDisplay[0] || (
-    typeof getSelectedPhoneSmsProvider === 'function'
-      ? getSelectedPhoneSmsProvider()
-      : normalizeProvider(selectPhoneSmsProvider?.value || latestState?.phoneSmsProvider || heroProviderValue)
-  );
+  const selectedPhoneSmsProviderValue = typeof getSelectedPhoneSmsProvider === 'function'
+    ? normalizeProvider(getSelectedPhoneSmsProvider())
+    : normalizeProvider(selectPhoneSmsProvider?.value || latestState?.phoneSmsProvider || heroProviderValue);
+  const provider = selectedPhoneSmsProviderValue === customSmsProviderValue
+    ? customSmsProviderValue
+    : (providerOrderForDisplay[0] || selectedPhoneSmsProviderValue);
   const heroProvider = provider === heroProviderValue;
   const fiveSimProvider = provider === fiveSimProviderValue;
   const nexSmsProvider = provider === nexSmsProviderValue;
   const customSmsProvider = provider === customSmsProviderValue;
+  const customSmsSettingsVisible = showSettings && customSmsProvider;
   if (rowPhoneVerificationEnabled) {
     rowPhoneVerificationEnabled.style.display = canShowPhoneSettings ? '' : 'none';
   }
   if (rowHeroSmsPlatform) {
-    rowHeroSmsPlatform.style.display = canShowPhoneSettings ? '' : 'none';
+    rowHeroSmsPlatform.style.display = customSmsSettingsVisible ? 'none' : (canShowPhoneSettings ? '' : 'none');
   }
   updateSignupMethodUI();
   if (btnTogglePhoneVerificationSection) {
@@ -8361,24 +8367,31 @@ function updatePhoneVerificationSettingsUI() {
   if (typeof rowPhoneSignupReloginAfterBindEmail !== 'undefined' && rowPhoneSignupReloginAfterBindEmail) {
     rowPhoneSignupReloginAfterBindEmail.style.display = showPhoneSignupReloginAfterBindEmail ? '' : 'none';
   }
-  if (rowHeroSmsCountry) rowHeroSmsCountry.style.display = showSettings && heroProvider ? '' : 'none';
-  if (rowHeroSmsCountryFallback) rowHeroSmsCountryFallback.style.display = showSettings && heroProvider ? '' : 'none';
-  if (rowHeroSmsAcquirePriority) rowHeroSmsAcquirePriority.style.display = showSettings && heroProvider ? '' : 'none';
-  if (rowHeroSmsApiKey) rowHeroSmsApiKey.style.display = showSettings && heroProvider ? '' : 'none';
-  if (rowFiveSimApiKey) rowFiveSimApiKey.style.display = showSettings && fiveSimProvider ? '' : 'none';
-  if (rowFiveSimCountry) rowFiveSimCountry.style.display = showSettings && fiveSimProvider ? '' : 'none';
-  if (rowFiveSimCountryFallback) rowFiveSimCountryFallback.style.display = showSettings && fiveSimProvider ? '' : 'none';
-  if (rowFiveSimOperator) rowFiveSimOperator.style.display = showSettings && fiveSimProvider ? '' : 'none';
-  if (rowFiveSimProduct) rowFiveSimProduct.style.display = showSettings && fiveSimProvider ? '' : 'none';
-  if (rowNexSmsApiKey) rowNexSmsApiKey.style.display = showSettings && nexSmsProvider ? '' : 'none';
-  if (rowNexSmsCountry) rowNexSmsCountry.style.display = showSettings && nexSmsProvider ? '' : 'none';
-  if (rowNexSmsCountryFallback) rowNexSmsCountryFallback.style.display = showSettings && nexSmsProvider ? '' : 'none';
-  if (rowNexSmsServiceCode) rowNexSmsServiceCode.style.display = showSettings && nexSmsProvider ? '' : 'none';
+  if (rowHeroSmsCountry) rowHeroSmsCountry.style.display = customSmsSettingsVisible ? 'none' : (showSettings && heroProvider ? '' : 'none');
+  if (rowHeroSmsCountryFallback) rowHeroSmsCountryFallback.style.display = customSmsSettingsVisible ? 'none' : (showSettings && heroProvider ? '' : 'none');
+  if (rowHeroSmsAcquirePriority) rowHeroSmsAcquirePriority.style.display = customSmsSettingsVisible ? 'none' : (showSettings && heroProvider ? '' : 'none');
+  if (rowHeroSmsApiKey) rowHeroSmsApiKey.style.display = customSmsSettingsVisible ? 'none' : (showSettings && heroProvider ? '' : 'none');
+  if (rowHeroSmsMaxPrice) rowHeroSmsMaxPrice.style.display = customSmsSettingsVisible ? 'none' : (showSettings && heroProvider ? '' : 'none');
+  if (rowFiveSimApiKey) rowFiveSimApiKey.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  if (rowFiveSimCountry) rowFiveSimCountry.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  if (rowFiveSimCountryFallback) rowFiveSimCountryFallback.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  if (rowFiveSimOperator) rowFiveSimOperator.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  if (rowFiveSimProduct) rowFiveSimProduct.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  if (rowNexSmsApiKey) rowNexSmsApiKey.style.display = customSmsSettingsVisible ? 'none' : (showSettings && nexSmsProvider ? '' : 'none');
+  if (rowNexSmsCountry) rowNexSmsCountry.style.display = customSmsSettingsVisible ? 'none' : (showSettings && nexSmsProvider ? '' : 'none');
+  if (rowNexSmsCountryFallback) rowNexSmsCountryFallback.style.display = customSmsSettingsVisible ? 'none' : (showSettings && nexSmsProvider ? '' : 'none');
+  if (rowNexSmsServiceCode) rowNexSmsServiceCode.style.display = customSmsSettingsVisible ? 'none' : (showSettings && nexSmsProvider ? '' : 'none');
   if (typeof rowCustomSmsPhoneEntries !== 'undefined' && rowCustomSmsPhoneEntries) {
-    rowCustomSmsPhoneEntries.style.display = showSettings && customSmsProvider ? '' : 'none';
+    rowCustomSmsPhoneEntries.style.display = customSmsSettingsVisible ? '' : 'none';
   }
   if (rowFiveSimOperator) {
-    rowFiveSimOperator.style.display = showSettings && fiveSimProvider ? '' : 'none';
+    rowFiveSimOperator.style.display = customSmsSettingsVisible ? 'none' : (showSettings && fiveSimProvider ? '' : 'none');
+  }
+  if (typeof rowPhoneSmsProviderOrder !== 'undefined' && rowPhoneSmsProviderOrder) {
+    rowPhoneSmsProviderOrder.style.display = customSmsSettingsVisible ? 'none' : (showSettings ? '' : 'none');
+  }
+  if (typeof rowPhoneSmsProviderOrderActions !== 'undefined' && rowPhoneSmsProviderOrderActions) {
+    rowPhoneSmsProviderOrderActions.style.display = customSmsSettingsVisible ? 'none' : (showSettings ? '' : 'none');
   }
   if (typeof rowFreePhoneReuseEnabled !== 'undefined' && rowFreePhoneReuseEnabled) {
     rowFreePhoneReuseEnabled.style.display = showSettings ? '' : 'none';
@@ -8467,6 +8480,21 @@ function updatePhoneVerificationSettingsUI() {
     rowFreePhoneReuseAutoEnabled.classList.toggle('is-disabled', phoneSignupReuseLocked || !freePhoneReuseAutoAvailable);
   }
   const runtimeVisible = enabled;
+  if (typeof rowHeroSmsRuntimePair !== 'undefined' && rowHeroSmsRuntimePair) {
+    rowHeroSmsRuntimePair.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
+  }
+  if (typeof rowHeroSmsCurrentNumber !== 'undefined' && rowHeroSmsCurrentNumber) {
+    rowHeroSmsCurrentNumber.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
+  }
+  if (typeof rowHeroSmsCurrentCountdown !== 'undefined' && rowHeroSmsCurrentCountdown) {
+    rowHeroSmsCurrentCountdown.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
+  }
+  if (typeof rowHeroSmsCurrentCode !== 'undefined' && rowHeroSmsCurrentCode) {
+    rowHeroSmsCurrentCode.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
+  }
+  if (typeof rowHeroSmsPreferredActivation !== 'undefined' && rowHeroSmsPreferredActivation) {
+    rowHeroSmsPreferredActivation.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
+  }
   [
     typeof rowHeroSmsRuntimePair !== 'undefined' ? rowHeroSmsRuntimePair : null,
     typeof rowHeroSmsCurrentNumber !== 'undefined' ? rowHeroSmsCurrentNumber : null,
@@ -8476,7 +8504,7 @@ function updatePhoneVerificationSettingsUI() {
     typeof rowHeroSmsPreferredActivation !== 'undefined' ? rowHeroSmsPreferredActivation : null,
   ].forEach((row) => {
     if (row) {
-      row.style.display = runtimeVisible ? '' : 'none';
+      row.style.display = customSmsSettingsVisible ? 'none' : (runtimeVisible ? '' : 'none');
     }
   });
   if (typeof syncSignupPhoneInputFromState === 'function') {

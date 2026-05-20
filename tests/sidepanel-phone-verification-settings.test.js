@@ -612,6 +612,7 @@ const rowNexSmsApiKey = { style: { display: 'none' } };
 const rowNexSmsCountry = { style: { display: 'none' } };
 const rowNexSmsCountryFallback = { style: { display: 'none' } };
 const rowNexSmsServiceCode = { style: { display: 'none' } };
+const rowCustomSmsPhoneEntries = { style: { display: 'none' } };
 const rowHeroSmsRuntimePair = { style: { display: 'none' } };
 const rowHeroSmsCurrentNumber = { style: { display: 'none' } };
 const rowHeroSmsCurrentCountdown = { style: { display: 'none' } };
@@ -694,6 +695,7 @@ return {
   rowNexSmsCountry,
   rowNexSmsCountryFallback,
   rowNexSmsServiceCode,
+  rowCustomSmsPhoneEntries,
   rowHeroSmsRuntimePair,
   rowHeroSmsCurrentNumber,
   rowHeroSmsCurrentCountdown,
@@ -856,6 +858,32 @@ return {
   assert.equal(api.rowNexSmsCountry.style.display, '');
   assert.equal(api.rowNexSmsCountryFallback.style.display, '');
   assert.equal(api.rowNexSmsServiceCode.style.display, '');
+
+  api.setSelectedPhoneSmsProvider('custom-sms');
+  api.updatePhoneVerificationSettingsUI();
+  assert.equal(api.rowCustomSmsPhoneEntries.style.display, '');
+  assert.equal(api.rowPhoneSmsProviderOrder.style.display, 'none');
+  assert.equal(api.rowPhoneSmsProviderOrderActions.style.display, 'none');
+  assert.equal(api.rowHeroSmsPlatform.style.display, 'none');
+  assert.equal(api.rowHeroSmsCountry.style.display, 'none');
+  assert.equal(api.rowHeroSmsCountryFallback.style.display, 'none');
+  assert.equal(api.rowHeroSmsAcquirePriority.style.display, 'none');
+  assert.equal(api.rowHeroSmsApiKey.style.display, 'none');
+  assert.equal(api.rowHeroSmsMaxPrice.style.display, 'none');
+  assert.equal(api.rowFiveSimApiKey.style.display, 'none');
+  assert.equal(api.rowFiveSimCountry.style.display, 'none');
+  assert.equal(api.rowFiveSimCountryFallback.style.display, 'none');
+  assert.equal(api.rowFiveSimOperator.style.display, 'none');
+  assert.equal(api.rowFiveSimProduct.style.display, 'none');
+  assert.equal(api.rowNexSmsApiKey.style.display, 'none');
+  assert.equal(api.rowNexSmsCountry.style.display, 'none');
+  assert.equal(api.rowNexSmsCountryFallback.style.display, 'none');
+  assert.equal(api.rowNexSmsServiceCode.style.display, 'none');
+  assert.equal(api.rowHeroSmsRuntimePair.style.display, 'none');
+  assert.equal(api.rowHeroSmsCurrentNumber.style.display, 'none');
+  assert.equal(api.rowHeroSmsCurrentCountdown.style.display, 'none');
+  assert.equal(api.rowHeroSmsCurrentCode.style.display, 'none');
+  assert.equal(api.rowHeroSmsPreferredActivation.style.display, 'none');
 });
 
 test('collectSettingsPayload keeps local helper sync enabled while persisting sms toggle state', () => {
